@@ -1,0 +1,48 @@
+[
+  { "slug": "fighting-games",      "name_en": "fighting games",      "name_fr": "jeux de combat",       "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["fgc", "mobas", "casual"] },
+  { "slug": "mobas",               "name_en": "MOBAs",               "name_fr": "MOBAs",                "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["shooters", "fighting-games"] },
+  { "slug": "shooters",            "name_en": "shooters",            "name_fr": "jeux de tir",          "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["mobas", "fgc"] },
+  { "slug": "sports-games",        "name_en": "sports games",        "name_fr": "jeux de sport",        "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["mobile-games"] },
+  { "slug": "mobile-games",        "name_en": "mobile games",        "name_fr": "jeux mobiles",         "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["casual"] },
+  { "slug": "fgc",                 "name_en": "FGC",                 "name_fr": "FGC",                  "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["fighting-games", "shoutcasting"] },
+  { "slug": "casual",              "name_en": "casual",              "name_fr": "casual",               "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["mobile-games"] },
+
+  { "slug": "game-dev",            "name_en": "game dev",            "name_fr": "développement de jeux","group": "create",  "color": "#2b5a8a", "adjacency_slugs": ["unity", "godot", "narrative-design"] },
+  { "slug": "unity",               "name_en": "Unity",               "name_fr": "Unity",                "group": "create",  "color": "#2b5a8a", "adjacency_slugs": ["game-dev"] },
+  { "slug": "godot",               "name_en": "Godot",               "name_fr": "Godot",                "group": "create",  "color": "#2b5a8a", "adjacency_slugs": ["game-dev"] },
+  { "slug": "3d-art",              "name_en": "3D art",              "name_fr": "art 3D",               "group": "create",  "color": "#2b5a8a", "adjacency_slugs": ["2d-art", "concept-art"] },
+  { "slug": "2d-art",              "name_en": "2D art",              "name_fr": "art 2D",               "group": "create",  "color": "#2b5a8a", "adjacency_slugs": ["concept-art"] },
+  { "slug": "narrative-design",    "name_en": "narrative design",    "name_fr": "conception narrative", "group": "create",  "color": "#2b5a8a", "adjacency_slugs": ["writing", "lore"] },
+  { "slug": "game-audio",          "name_en": "game audio",          "name_fr": "audio de jeu",         "group": "create",  "color": "#2b5a8a", "adjacency_slugs": ["audio-eng", "voice-acting"] },
+
+  { "slug": "singing",             "name_en": "singing",             "name_fr": "chant",                "group": "voice",   "color": "#6b3a7a", "adjacency_slugs": ["voice-acting", "composing"] },
+  { "slug": "voice-acting",        "name_en": "voice acting",        "name_fr": "doublage",             "group": "voice",   "color": "#6b3a7a", "adjacency_slugs": ["voiceover", "singing", "game-audio"] },
+  { "slug": "voiceover",           "name_en": "voiceover",           "name_fr": "voix off",             "group": "voice",   "color": "#6b3a7a", "adjacency_slugs": ["voice-acting"] },
+  { "slug": "composing",           "name_en": "composing",           "name_fr": "composition",          "group": "voice",   "color": "#6b3a7a", "adjacency_slugs": ["singing", "game-audio"] },
+  { "slug": "audio-eng",           "name_en": "audio engineering",   "name_fr": "ingénierie du son",    "group": "voice",   "color": "#6b3a7a", "adjacency_slugs": ["game-audio"] },
+
+  { "slug": "streaming",           "name_en": "streaming",           "name_fr": "streaming",            "group": "stream",  "color": "#c94a2a", "adjacency_slugs": ["content-creation", "shoutcasting"] },
+  { "slug": "content-creation",    "name_en": "content creation",    "name_fr": "création de contenu",  "group": "stream",  "color": "#c94a2a", "adjacency_slugs": ["streaming", "short-form"] },
+  { "slug": "shoutcasting",        "name_en": "shoutcasting",        "name_fr": "commentaire sportif",  "group": "stream",  "color": "#c94a2a", "adjacency_slugs": ["commentary", "streaming"] },
+  { "slug": "commentary",          "name_en": "commentary",          "name_fr": "commentaire",          "group": "stream",  "color": "#c94a2a", "adjacency_slugs": ["shoutcasting"] },
+  { "slug": "short-form",          "name_en": "short-form",          "name_fr": "format court",         "group": "stream",  "color": "#c94a2a", "adjacency_slugs": ["content-creation"] },
+
+  { "slug": "writing",             "name_en": "writing",             "name_fr": "écriture",             "group": "words",   "color": "#2b5a8a", "adjacency_slugs": ["narrative-design", "lore", "journalism"] },
+  { "slug": "lore",                "name_en": "lore",                "name_fr": "lore",                 "group": "words",   "color": "#2b5a8a", "adjacency_slugs": ["narrative-design"] },
+  { "slug": "journalism",          "name_en": "journalism",          "name_fr": "journalisme",          "group": "words",   "color": "#2b5a8a", "adjacency_slugs": ["writing"] },
+  { "slug": "storytelling",        "name_en": "storytelling",        "name_fr": "récit",                "group": "words",   "color": "#2b5a8a", "adjacency_slugs": ["narrative-design", "writing"] },
+
+  { "slug": "cosplay",             "name_en": "cosplay",             "name_fr": "cosplay",              "group": "look",    "color": "#6b3a7a", "adjacency_slugs": ["character-design", "fashion", "concept-art"] },
+  { "slug": "character-design",    "name_en": "character design",    "name_fr": "design de personnage", "group": "look",    "color": "#6b3a7a", "adjacency_slugs": ["cosplay", "concept-art"] },
+  { "slug": "concept-art",         "name_en": "concept art",         "name_fr": "art conceptuel",       "group": "look",    "color": "#6b3a7a", "adjacency_slugs": ["2d-art", "character-design"] },
+  { "slug": "fashion",             "name_en": "fashion",             "name_fr": "mode",                 "group": "look",    "color": "#6b3a7a", "adjacency_slugs": ["cosplay"] },
+
+  { "slug": "community",           "name_en": "community",           "name_fr": "communauté",           "group": "lead",    "color": "#a67c1e", "adjacency_slugs": ["event-organising", "chapter-lead"] },
+  { "slug": "event-organising",    "name_en": "event organising",    "name_fr": "organisation d'événements","group": "lead","color": "#a67c1e", "adjacency_slugs": ["community", "chapter-lead"] },
+  { "slug": "chapter-lead",        "name_en": "chapter lead",        "name_fr": "responsable de chapitre","group": "lead",  "color": "#a67c1e", "adjacency_slugs": ["community", "event-organising"] },
+  { "slug": "advocacy",            "name_en": "advocacy",            "name_fr": "plaidoyer",            "group": "lead",    "color": "#a67c1e", "adjacency_slugs": ["community"] },
+  { "slug": "research",            "name_en": "research",            "name_fr": "recherche",            "group": "lead",    "color": "#a67c1e", "adjacency_slugs": ["writing"] },
+
+  { "slug": "safety",              "name_en": "digital safety",      "name_fr": "sécurité numérique",   "group": "lead",    "color": "#a67c1e", "adjacency_slugs": ["community", "advocacy"] },
+  { "slug": "mental-game",         "name_en": "mental game",         "name_fr": "mental",               "group": "play",    "color": "#c94a2a", "adjacency_slugs": ["fgc"] }
+]

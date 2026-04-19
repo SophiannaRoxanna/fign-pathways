@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "voice-acting-curiosity-to-reel",
+    "title": "Voice acting · from curiosity to reel",
+    "co_author_slugs": ["femmes-aux-consoles", "fign"],
+    "blurb": "Start curious, end with a 60-second reel. 4 lessons + 1 optional application.",
+    "tags": ["voice-acting", "singing"],
+    "lesson_slugs": ["voice-acting-for-games-intro", "cold-read-a-vo-script"]
+  },
+  {
+    "slug": "mk1-first-match-to-ranked-squad",
+    "title": "MK1 · from first match to ranked squad",
+    "co_author_slugs": ["fign", "open-source"],
+    "blurb": "The three things you'll quietly regret not learning early.",
+    "tags": ["fighting-games", "fgc"],
+    "lesson_slugs": ["mk1-frame-data", "mk1-punish-optimisation", "mental-game-losing"]
+  },
+  {
+    "slug": "host-your-first-play-night",
+    "title": "Host your first play-night",
+    "co_author_slugs": ["fign"],
+    "blurb": "By the end: a run sheet, a welcome script, a safety checklist.",
+    "tags": ["community", "event-organising"],
+    "lesson_slugs": ["hosting-a-play-night", "welcoming-newcomers-10-min", "digital-safety-essentials"]
+  },
+  {
+    "slug": "make-your-first-small-game",
+    "title": "Make your first small game",
+    "co_author_slugs": ["igda-foundation", "fign", "open-source"],
+    "blurb": "Unity or Godot — pick one, ship something in a weekend.",
+    "tags": ["game-dev", "unity", "godot"],
+    "lesson_slugs": ["unity-your-first-scene", "godot-2d-platformer", "narrative-design-beat-shape"]
+  }
+]

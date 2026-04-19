@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-paper: #f5ecdc;
+  --color-paper-alt: #ece1cc;
+  --color-paper-dk: #ddcfb4;
+  --color-ink: #1a1410;
+  --color-ink-soft: #4a3d30;
+  --color-ink-mute: #8a7a68;
+  --color-coral: #c94a2a;
+  --color-coral-dk: #8a2e14;
+  --color-green: #1f7a3f;
+  --color-green-lt: #e8f4ec;
+  --color-blue: #2b5a8a;
+  --color-purple: #6b3a7a;
+  --color-gold: #a67c1e;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--color-paper);
+  --color-paper-alt: var(--color-paper-alt);
+  --color-paper-dk: var(--color-paper-dk);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-ink-mute: var(--color-ink-mute);
+  --color-coral: var(--color-coral);
+  --color-coral-dk: var(--color-coral-dk);
+  --color-green: var(--color-green);
+  --color-green-lt: var(--color-green-lt);
+  --color-blue: var(--color-blue);
+  --color-purple: var(--color-purple);
+  --color-gold: var(--color-gold);
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+@keyframes drift {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.drift-0 { animation: drift .7s ease-out 0s both; }
+.drift-1 { animation: drift .7s ease-out .12s both; }
+.drift-2 { animation: drift .7s ease-out .24s both; }
+.drift-3 { animation: drift .7s ease-out .36s both; }
+.drift-4 { animation: drift .7s ease-out .48s both; }
+
+@keyframes pulse-ring {
+  0%   { r: 22; opacity: 0.9; }
+  100% { r: 40; opacity: 0; }
+}
+.pulse-ring { animation: pulse-ring 2s ease-out infinite; transform-origin: center; }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.10; }
+  50%      { opacity: 0.22; }
+}
+.pulse { animation: pulse-glow 2.4s ease-in-out infinite; }
