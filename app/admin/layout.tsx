@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { C } from "@/lib/design/tokens";
+import { Logo } from "@/components/ui/Logo";
 
 // Admin shell. Umbrella-admin only — anyone else bounces to /map.
 export default async function AdminLayout({
@@ -41,8 +42,9 @@ export default async function AdminLayout({
             href="/admin"
             className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
             style={{ color: C.ink }}
+            aria-label="FIGN — admin desk"
           >
-            <span style={{ color: C.coral }}>FIGN</span>
+            <Logo height={28} priority />
             <span style={{ opacity: 0.3 }}>·</span>
             <span>Admin desk</span>
           </Link>

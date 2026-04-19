@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { C } from "@/lib/design/tokens";
+import { Logo } from "@/components/ui/Logo";
 
 export default async function MemberLayout({
   children,
@@ -37,10 +38,11 @@ export default async function MemberLayout({
       >
         <Link
           href="/map"
-          className="flex items-center gap-4 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
+          className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
           style={{ color: C.ink }}
+          aria-label="FIGN — your map"
         >
-          <span style={{ color: C.coral }}>FIGN</span>
+          <Logo height={28} priority />
           <span style={{ opacity: 0.3 }}>·</span>
           <span>Your map</span>
         </Link>

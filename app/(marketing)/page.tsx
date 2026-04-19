@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { C } from "@/lib/design/tokens";
 import { Label } from "@/components/ui/Label";
+import { Logo } from "@/components/ui/Logo";
 import { Door } from "@/components/landing/Door";
 import { EvidenceStrip } from "@/components/landing/EvidenceStrip";
 import { OrgsStrip } from "@/components/landing/OrgsStrip";
@@ -22,7 +23,7 @@ export default function LandingPage() {
         style={{ borderBottom: `1.5px solid ${C.hairlineDark}` }}
       >
         <div className="flex items-center gap-4 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold">
-          <span style={{ color: C.coral }}>FIGN</span>
+          <Logo href="/" height={32} priority />
           <span style={{ opacity: 0.4, color: C.inkOnDarkMute }}>·</span>
           <span style={{ color: C.inkOnDark }}>Females in Gaming Network</span>
           <span

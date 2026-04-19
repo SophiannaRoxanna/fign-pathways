@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { C } from "@/lib/design/tokens";
 import { Label } from "@/components/ui/Label";
+import { Logo } from "@/components/ui/Logo";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -41,7 +42,10 @@ export default function SignInPage() {
           border: `2px solid ${C.hairlineDark}`,
         }}
       >
-        <Label color={C.coral}>FIGN · sign in</Label>
+        <div className="flex items-center gap-3">
+          <Logo height={28} priority />
+          <Label color={C.coral}>sign in</Label>
+        </div>
         <h1
           className="mt-3 font-display text-4xl italic leading-tight"
           style={{ color: C.inkOnDark }}
