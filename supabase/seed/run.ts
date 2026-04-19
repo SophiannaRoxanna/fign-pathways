@@ -9,7 +9,10 @@
  *
  * Run: pnpm seed
  */
-import "dotenv/config";
+import { config as dotenvConfig } from "dotenv";
+// Load .env.local first (Next.js convention), falling back to .env.
+dotenvConfig({ path: ".env.local" });
+dotenvConfig({ path: ".env" });
 import { createClient } from "@supabase/supabase-js";
 import { readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
