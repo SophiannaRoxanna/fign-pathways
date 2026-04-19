@@ -58,7 +58,7 @@ export function SkillsLab({ lessons }: { lessons: SkillsLabLesson[] }) {
                 </span>
               </div>
               <h3
-                className="font-serif text-xl italic leading-tight"
+                className="font-display text-xl italic leading-tight"
                 style={{ color: C.ink }}
               >
                 {l.title}

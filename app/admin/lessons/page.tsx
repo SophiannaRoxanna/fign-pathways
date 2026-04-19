@@ -52,7 +52,7 @@ export default async function AdminLessonsPage() {
         </div>
         {lessons.length === 0 ? (
           <div
-            className="px-5 py-8 text-center italic font-serif text-lg"
+            className="px-5 py-8 text-center italic font-display text-lg"
             style={{ color: C.inkMute }}
           >
             No lessons yet. <Link href="/admin/lessons/new" style={{ color: C.coral }}>Write the first one →</Link>
@@ -76,7 +76,7 @@ export default async function AdminLessonsPage() {
                   <span style={{ color: C.inkMute }}>—</span>
                 )}
                 <span
-                  className="font-serif text-[17px] truncate"
+                  className="font-display text-[17px] truncate"
                   style={{ color: C.ink }}
                 >
                   {l.title}

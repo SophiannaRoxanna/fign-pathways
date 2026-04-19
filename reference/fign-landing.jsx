@@ -231,7 +231,7 @@ export default function FIGNLanding() {
       </header>
 
       {/* Hero */}
-      <section className="px-6 md:px-12 pt-16 pb-10 max-w-[1280px] mx-auto drift-0">
+      <section className="px-6 md:px-12 pt-16 pb-10 max-w-7xl mx-auto drift-0">
         <Label>the point</Label>
         <h1
           className="mt-4 text-6xl md:text-[104px] leading-[0.92]"
@@ -267,7 +267,7 @@ export default function FIGNLanding() {
       </section>
 
       {/* Doors */}
-      <section className="px-6 md:px-12 max-w-[1280px] mx-auto space-y-4 drift-1">
+      <section className="px-6 md:px-12 max-w-7xl mx-auto space-y-4 drift-1">
         {DOORS.map((d) => (
           <Door
             key={d.key}
@@ -280,7 +280,7 @@ export default function FIGNLanding() {
       </section>
 
       {/* Evidence strip */}
-      <section className="mt-20 px-6 md:px-12 max-w-[1280px] mx-auto drift-2">
+      <section className="mt-20 px-6 md:px-12 max-w-7xl mx-auto drift-2">
         <Label>not a pitch · the receipts</Label>
         <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           {EVIDENCE.map((e) => (
@@ -300,7 +300,7 @@ export default function FIGNLanding() {
       </section>
 
       {/* Federation strip — the orgs under the umbrella */}
-      <section className="mt-16 px-6 md:px-12 max-w-[1280px] mx-auto drift-3">
+      <section className="mt-16 px-6 md:px-12 max-w-7xl mx-auto drift-3">
         <div className="flex items-baseline justify-between mb-5">
           <div>
             <Label>who's already under the umbrella</Label>
@@ -333,7 +333,7 @@ export default function FIGNLanding() {
       </section>
 
       {/* Founder line + contact */}
-      <section className="mt-20 px-6 md:px-12 max-w-[1280px] mx-auto pb-20 drift-4">
+      <section className="mt-20 px-6 md:px-12 max-w-7xl mx-auto pb-20 drift-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
           <div className="md:col-span-8">
             <Label>a note from the founder</Label>

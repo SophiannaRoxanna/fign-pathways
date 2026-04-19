@@ -12,13 +12,15 @@ type Props = {
 };
 
 export function Door({ door, isOpen, onOpen, onClose }: Props) {
+  // Dark-theme landing: closed doors wear surfaceDark, opened doors fill with
+  // their brand colour. Border steps from hairlineDark → door.color on open.
   return (
     <div
       className="relative transition-all"
       style={{
-        background: isOpen ? door.color : C.paperAlt,
-        color: isOpen ? C.paper : C.ink,
-        border: `2px solid ${C.ink}`,
+        background: isOpen ? door.color : C.surfaceDark,
+        color: isOpen ? C.inkOnDark : C.inkOnDark,
+        border: `2px solid ${isOpen ? door.color : C.hairlineDark}`,
       }}
     >
       <button
@@ -29,14 +31,16 @@ export function Door({ door, isOpen, onOpen, onClose }: Props) {
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-baseline gap-4">
             <span
-              className="font-serif text-4xl italic leading-none"
-              style={{ color: isOpen ? C.paper : door.color }}
+              className="font-display text-4xl italic leading-none"
+              style={{ color: isOpen ? C.inkOnDark : door.color }}
             >
               {door.number}
             </span>
             <div>
-              <Label color={isOpen ? C.paper : C.inkMute}>{door.kicker}</Label>
-              <h2 className="mt-2 font-serif text-2xl md:text-3xl leading-tight">
+              <Label color={isOpen ? C.inkOnDark : C.inkOnDarkMute}>
+                {door.kicker}
+              </Label>
+              <h2 className="mt-2 font-display text-2xl md:text-3xl leading-tight">
                 {door.headline}
               </h2>
             </div>
@@ -52,7 +56,10 @@ export function Door({ door, isOpen, onOpen, onClose }: Props) {
 
       {isOpen && (
         <div className="px-6 md:px-8 pb-8 -mt-2">
-          <p className="text-[15px] md:text-base leading-relaxed max-w-2xl" style={{ opacity: 0.95 }}>
+          <p
+            className="text-[15px] md:text-base leading-relaxed max-w-2xl"
+            style={{ opacity: 0.95 }}
+          >
             {door.lede}
           </p>
           <ul className="mt-6 space-y-2">
@@ -64,7 +71,7 @@ export function Door({ door, isOpen, onOpen, onClose }: Props) {
               >
                 <span
                   className="font-mono mt-0.5"
-                  style={{ color: C.paper, opacity: 0.55 }}
+                  style={{ color: C.inkOnDark, opacity: 0.55 }}
                 >
                   ·
                 </span>
@@ -76,13 +83,13 @@ export function Door({ door, isOpen, onOpen, onClose }: Props) {
             <a
               href={door.href}
               className="font-mono text-[11px] tracking-[0.2em] uppercase font-bold px-5 py-3 inline-block"
-              style={{ background: C.paper, color: door.color }}
+              style={{ background: C.inkOnDark, color: door.color }}
             >
               {door.cta} →
             </a>
             <span
               className="font-mono text-[10px] tracking-wider uppercase"
-              style={{ color: C.paper, opacity: 0.75 }}
+              style={{ color: C.inkOnDark, opacity: 0.75 }}
             >
               {door.subcta}
             </span>

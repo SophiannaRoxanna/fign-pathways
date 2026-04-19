@@ -43,7 +43,7 @@ export const DOOR_COPY: Record<DoorId, Omit<DoorCopy, "title"> & { titleFallback
     titleFallback: "Follow a curriculum on this",
     why: "The natural next step, if you want it",
     commitment: "multi-lesson path",
-    color: C.purple,
+    color: C.blue, // deep purple — natural-next-step weight
   },
   take_it_live: {
     id: "take_it_live",
@@ -51,7 +51,7 @@ export const DOOR_COPY: Record<DoorId, Omit<DoorCopy, "title"> & { titleFallback
     titleFallback: "Apply this to a real opportunity",
     why: "Paid work, because you're already here",
     commitment: "application or intro",
-    color: C.blue,
+    color: C.purple, // partner-org vibe — real-world opportunity
   },
   bring_someone: {
     id: "bring_someone",

@@ -42,13 +42,13 @@ export default async function OrgAdminPlaceholderPage({
       <div className="max-w-2xl mx-auto">
         <Label>§ org admin · phase 2</Label>
         <h1
-          className="mt-3 font-serif italic text-4xl md:text-5xl leading-[1.05]"
+          className="mt-3 font-display italic text-4xl md:text-5xl leading-[1.05]"
           style={{ color: C.ink }}
         >
           Org admin coming in <em>Phase 2</em>.
         </h1>
         <p
-          className="mt-5 font-serif italic text-xl leading-snug"
+          className="mt-5 font-display italic text-xl leading-snug"
           style={{ color: C.inkSoft }}
         >
           For now, ask Sophia — she&rsquo;ll post items, add co-hosts, and wire

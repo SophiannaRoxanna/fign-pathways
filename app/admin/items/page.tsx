@@ -54,7 +54,7 @@ export default async function AdminItemsPage() {
         </div>
         {items.length === 0 ? (
           <div
-            className="px-5 py-8 text-center italic font-serif text-lg"
+            className="px-5 py-8 text-center italic font-display text-lg"
             style={{ color: C.inkMute }}
           >
             No items posted. <Link href="/admin/items/new" style={{ color: C.coral }}>Post the first one →</Link>
@@ -103,7 +103,7 @@ export default async function AdminItemsPage() {
                   {it.kind}
                 </span>
                 <span
-                  className="font-serif text-[17px] truncate"
+                  className="font-display text-[17px] truncate"
                   style={{ color: C.ink }}
                 >
                   {it.title}
@@ -113,7 +113,12 @@ export default async function AdminItemsPage() {
                   style={{ color: C.inkSoft }}
                 >
                   {it.when_start
-                    ? new Date(it.when_start).toLocaleDateString()
+                    ? new Date(it.when_start).toLocaleDateString("en", {
+                        timeZone: "UTC",
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
                     : it.rolling
                       ? "rolling"
                       : "—"}

@@ -108,7 +108,7 @@ export function OnboardingForm({
             step {step + 1} of {stepLabels.length}
           </Label>
         </div>
-        <h1 className="font-serif text-4xl md:text-5xl italic leading-tight">
+        <h1 className="font-display text-4xl md:text-5xl italic leading-tight">
           {step === 0 && "Start with the basics."}
           {step === 1 && (
             <>
@@ -268,7 +268,7 @@ export function OnboardingForm({
               onChange={(e) => setDescription(e.target.value)}
               onBlur={onDescriptionBlur}
               rows={5}
-              className="w-full px-3 py-2 font-serif italic"
+              className="w-full px-3 py-2 font-display italic"
               style={{ background: C.paper, border: `1.5px solid ${C.ink}` }}
               placeholder="I compete in MK1, sing on weekends, and love dressing up as characters. Curious whether voice acting in games is a real career."
             />
@@ -313,7 +313,7 @@ export function OnboardingForm({
               value={milestone}
               onChange={(e) => setMilestone(e.target.value)}
               rows={3}
-              className="mt-4 w-full px-3 py-2 font-serif italic"
+              className="mt-4 w-full px-3 py-2 font-display italic"
               style={{
                 background: C.paper,
                 border: `1.5px solid ${C.ink}`,
@@ -357,7 +357,7 @@ export function OnboardingForm({
               <div>
                 <Label>in your own words</Label>
                 <blockquote
-                  className="mt-1 font-serif italic text-[15px]"
+                  className="mt-1 font-display italic text-[15px]"
                   style={{ color: C.ink }}
                 >
                   &ldquo;{description}&rdquo;
@@ -368,7 +368,7 @@ export function OnboardingForm({
               <div>
                 <Label>your first milestone</Label>
                 <blockquote
-                  className="mt-1 font-serif italic text-[15px]"
+                  className="mt-1 font-display italic text-[15px]"
                   style={{ color: C.ink }}
                 >
                   &ldquo;{milestone}&rdquo;

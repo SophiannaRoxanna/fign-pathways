@@ -39,7 +39,7 @@ export default async function AdminDashboardPage() {
         kicker="umbrella desk"
         sub="Sophia's workbench. Everything that federates — orgs, items, lessons, members — is posted and edited from here."
       >
-        The view from the <em>umbrella</em>.
+        The view from the <em style={{ color: C.coral }}>umbrella</em>.
       </SectionHead>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
@@ -50,8 +50,8 @@ export default async function AdminDashboardPage() {
             style={{ background: C.ink, color: C.paper }}
           >
             <div
-              className="text-5xl italic leading-none font-serif"
-              style={{ color: C.paper }}
+              className="text-5xl italic leading-none font-display"
+              style={{ color: C.coral }}
             >
               {s.num}
             </div>
@@ -68,23 +68,24 @@ export default async function AdminDashboardPage() {
       <div className="mt-12">
         <Label>do something next</Label>
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-          {actions.map((a) => (
+          {actions.map((a, i) => (
             <Link
               key={a.href}
               href={a.href}
-              className="p-6 flex items-center justify-between font-mono text-[12px] tracking-[0.18em] uppercase font-bold"
+              className="p-6 flex items-baseline gap-5 font-mono text-[12px] tracking-[0.18em] uppercase font-bold"
               style={{
                 background: C.paperAlt,
                 color: C.ink,
                 border: `1.5px solid ${C.ink}`,
               }}
             >
-              <span>{a.label}</span>
               <span
-                className="w-2 h-6"
-                style={{ background: a.accent }}
-                aria-hidden
-              />
+                className="font-display italic text-3xl leading-none shrink-0"
+                style={{ color: a.accent }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="flex-1">{a.label}</span>
             </Link>
           ))}
         </div>

@@ -16,7 +16,7 @@ export function SectionHead({
     <div className="mb-7">
       <Label>§ {num} · {kicker}</Label>
       <h2
-        className="mt-2 font-serif text-3xl md:text-4xl leading-[1.05]"
+        className="mt-2 font-display text-3xl md:text-4xl leading-[1.05]"
         style={{ color: C.ink }}
       >
         {children}

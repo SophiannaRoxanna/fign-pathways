@@ -47,7 +47,7 @@ export function LessonDoneModal({ completion, options, onClose, onPick }: Props)
             </button>
           </div>
           <h2
-            className="mt-3 font-serif text-3xl md:text-4xl leading-tight"
+            className="mt-3 font-display text-3xl md:text-4xl leading-tight"
             style={{ color: C.ink }}
           >
             You finished{" "}
@@ -71,7 +71,7 @@ export function LessonDoneModal({ completion, options, onClose, onPick }: Props)
               onClick={() => {
                 void onPick(o.id);
               }}
-              className="p-4 text-left transition-all hover:translate-y-[-2px]"
+              className="p-4 text-left transition-all hover:-translate-y-0.5"
               style={{ background: C.paperAlt, border: `1.5px solid ${C.ink}` }}
             >
               <div className="flex items-center justify-between mb-2">
@@ -84,7 +84,7 @@ export function LessonDoneModal({ completion, options, onClose, onPick }: Props)
                 </span>
               </div>
               <div
-                className="font-serif italic"
+                className="font-display italic"
                 style={{ color: C.ink, fontSize: "17px" }}
               >
                 {o.title}

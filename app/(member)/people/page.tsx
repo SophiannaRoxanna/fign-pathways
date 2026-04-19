@@ -92,7 +92,7 @@ export default async function PeoplePage({
   const orgIds = Array.from(
     new Set(members.map((m) => m.primary_org_id).filter((x): x is string => !!x)),
   );
-  let orgMap = new Map<string, Organisation>();
+  const orgMap = new Map<string, Organisation>();
   if (orgIds.length > 0) {
     const { data: orgs } = await supabase
       .from("organisations")
@@ -172,7 +172,7 @@ export default async function PeoplePage({
           className="p-8 text-center"
           style={{ border: `1.5px dashed ${C.ink}55`, color: C.inkSoft }}
         >
-          <p className="italic font-serif text-lg">
+          <p className="italic font-display text-lg">
             No one matches those filters yet. Try widening.
           </p>
         </div>
@@ -191,7 +191,7 @@ export default async function PeoplePage({
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <h3
-                      className="font-serif italic text-xl leading-tight"
+                      className="font-display italic text-xl leading-tight"
                       style={{ color: C.ink }}
                     >
                       {m.name || m.handle || "Someone"}

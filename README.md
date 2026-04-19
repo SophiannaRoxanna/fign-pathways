@@ -177,7 +177,7 @@ components/
   admin/                           shared form primitives
 
 lib/
-  design/tokens.ts                 palette (paper/ink/coral/green/blue/purple/gold)
+  design/tokens.ts                 palette (pink + purple + white + black, with v3 back-compat aliases)
   copy/                            DOORS, EVIDENCE, interest groups, doorOptions
   supabase/                        server/client/admin clients, TS types
 
@@ -192,16 +192,19 @@ reference/                         the three prototypes + build plan
 
 ## Design language — don't drift
 
-Pinned here so every future page keeps the feel:
+Pinned here so every future page keeps the feel. The source of truth is [`lib/design/tokens.ts`](lib/design/tokens.ts) + [`.impeccable.md`](.impeccable.md) + [`CLAUDE.md`](CLAUDE.md) — read those when doing anything visual.
 
-- **Cream paper `#f5ecdc`**, not white. **Dark ink `#1a1410`**, not pure black.
-- Borders are **1.5px ink**, never gray-500 or pure black.
-- Headings in **Cormorant Garamond italic** (via `font-serif` class).
-- Labels, numbers, coordinates in **JetBrains Mono** (via `font-mono`).
-- `<em>` always in coral `#c94a2a`.
-- Host-colored top strip on every card is the federation signal — do not dilute.
-  - Member orgs wear purple `#6b3a7a`, partners wear blue `#2b5a8a`, FIGN wears coral, open source wears gold `#a67c1e`.
-- No gradients. No rounded corners above 2–3px except tag chips.
+- **Pink `#FF2F92` + Purple `#6C4AB6` + white + black.** Drawn from the FIGN logo. The earlier cream/coral palette was retired because it read AI-default rather than on-brand.
+- **Dark marketing / light app.** `/` and `/signin` run on `canvasDark #140A1A`. Everything authed (`/map`, `/admin`, etc.) runs on `paper #FEFCFD`.
+- Borders are **1.5px ink** on light, `hairlineDark` on dark. Never gray-500, never pure black.
+- Headings in **Bricolage Grotesque italic** (via `font-display` class).
+- Body copy in **Manrope** (default).
+- Labels, numbers, coordinates in **Martian Mono** (via `font-mono`).
+- `<em>` on light is `coralDk #CC1F74` (AA-safe); on dark it's `coral #FF2F92`.
+- **Host-colored top strip on every card is the federation signal** — do not dilute.
+  - Member orgs wear purple `#6C4AB6`, partners wear deep-purple `#4A2A8F`, FIGN and chapters wear pink `#FF2F92`, open-source orgs wear purple.
+  - Individual orgs can override with their own `brand_color` — respected everywhere.
+- No gradients. No rounded corners above 2–3px except tag chips. No side-stripe accents on cards.
 - Grid-paper SVG background pattern on big surfaces (interest map).
 
 ---

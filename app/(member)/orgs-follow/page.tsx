@@ -76,7 +76,7 @@ export default async function OrgsFollowPage() {
           className="p-8 text-center"
           style={{ border: `1.5px dashed ${C.ink}55`, color: C.inkSoft }}
         >
-          <p className="italic font-serif text-lg">No orgs published yet.</p>
+          <p className="italic font-display text-lg">No orgs published yet.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -112,7 +112,7 @@ export default async function OrgsFollowPage() {
                     )}
                   </div>
                   <h3
-                    className="mt-3 font-serif italic text-xl leading-tight"
+                    className="mt-3 font-display italic text-xl leading-tight"
                     style={{ color: C.ink }}
                   >
                     {o.name}

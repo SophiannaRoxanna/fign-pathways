@@ -7,6 +7,7 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import type { Milestone } from "@/lib/supabase/types";
 
 const dateFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   day: "numeric",
 });
@@ -98,7 +99,7 @@ export function MilestonesPanel({ initial }: { initial: Milestone[] }) {
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
                       rows={3}
-                      className="w-full p-2 font-serif italic text-lg"
+                      className="w-full p-2 font-display italic text-lg"
                       style={{
                         background: C.paper,
                         border: `1.5px solid ${C.ink}`,
@@ -130,7 +131,7 @@ export function MilestonesPanel({ initial }: { initial: Milestone[] }) {
                   </div>
                 ) : (
                   <blockquote
-                    className="font-serif text-lg italic leading-snug"
+                    className="font-display text-lg italic leading-snug"
                     style={{ color: C.ink }}
                   >
                     &ldquo;{m.text}&rdquo;
@@ -192,7 +193,7 @@ export function MilestonesPanel({ initial }: { initial: Milestone[] }) {
               onChange={(e) => setNewText(e.target.value)}
               rows={3}
               placeholder="I'll know I've grown when…"
-              className="w-full mt-2 p-2 font-serif italic"
+              className="w-full mt-2 p-2 font-display italic"
               style={{
                 background: C.paper,
                 border: `1.5px solid ${C.ink}`,
@@ -236,7 +237,7 @@ export function MilestonesPanel({ initial }: { initial: Milestone[] }) {
           >
             <Label color={C.coral}>+ new milestone</Label>
             <div
-              className="mt-1 font-serif italic"
+              className="mt-1 font-display italic"
               style={{ fontSize: "16px" }}
             >
               &ldquo;I&apos;ll know I&apos;ve grown when…&rdquo;

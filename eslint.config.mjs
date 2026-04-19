@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // FIGN additions
+    "reference/**",        // archived prototypes — not live code
+    "supabase/seed/*.ts",  // seed runner has loose types for Supabase JSON
   ]),
 ]);
 

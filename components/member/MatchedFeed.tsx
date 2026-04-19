@@ -5,6 +5,7 @@ import { OrgChip, type OrgChipData } from "@/components/org/OrgChip";
 import type { Item } from "@/lib/supabase/types";
 
 const whenFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   day: "numeric",
   year: "numeric",
@@ -130,7 +131,7 @@ export function MatchedFeed({ items }: { items: MatchedFeedCard[] }) {
                 )}
 
                 <h3
-                  className="mt-4 font-serif text-xl italic"
+                  className="mt-4 font-display text-xl italic"
                   style={{ color: C.ink }}
                 >
                   {item.title}

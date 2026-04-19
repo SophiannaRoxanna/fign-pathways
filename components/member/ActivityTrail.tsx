@@ -13,6 +13,7 @@ export type ActivityRow = {
 };
 
 const trailFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   day: "numeric",
 });

@@ -89,7 +89,7 @@ export default async function EditOrgPage({ params }: PageProps) {
       <div className="mt-14">
         <Label>org admins</Label>
         <h3
-          className="mt-2 font-serif text-2xl italic"
+          className="mt-2 font-display text-2xl italic"
           style={{ color: C.ink }}
         >
           Who can post for <em>{o.short_name ?? o.name}</em>?
@@ -101,7 +101,7 @@ export default async function EditOrgPage({ params }: PageProps) {
         >
           {admins.length === 0 ? (
             <div
-              className="px-5 py-6 italic font-serif"
+              className="px-5 py-6 italic font-display"
               style={{ color: C.inkMute }}
             >
               No admins yet. Invite someone below — the first person becomes
@@ -120,7 +120,7 @@ export default async function EditOrgPage({ params }: PageProps) {
               >
                 <div>
                   <div
-                    className="font-serif text-[17px]"
+                    className="font-display text-[17px]"
                     style={{ color: C.ink }}
                   >
                     {a.members?.name ?? a.members?.handle ?? "—"}
@@ -146,7 +146,12 @@ export default async function EditOrgPage({ params }: PageProps) {
                   className="font-mono text-[10px] tracking-wider"
                   style={{ color: C.inkMute }}
                 >
-                  {new Date(a.added_at).toLocaleDateString()}
+                  {new Date(a.added_at).toLocaleDateString("en", {
+                    timeZone: "UTC",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </span>
               </div>
             ))
@@ -158,7 +163,7 @@ export default async function EditOrgPage({ params }: PageProps) {
           className="mt-6 flex flex-wrap items-end gap-3"
         >
           <input type="hidden" name="org_id" value={o.id} />
-          <div className="flex flex-col gap-1.5 flex-1 min-w-[260px]">
+          <div className="flex flex-col gap-1.5 flex-1 min-w-65">
             <Label>invite admin by email</Label>
             <input
               name="email"

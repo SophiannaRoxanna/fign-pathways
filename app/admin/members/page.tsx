@@ -130,7 +130,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
         </div>
         {members.length === 0 ? (
           <div
-            className="px-5 py-8 text-center italic font-serif text-lg"
+            className="px-5 py-8 text-center italic font-display text-lg"
             style={{ color: C.inkMute }}
           >
             No members match.
@@ -155,7 +155,7 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
                   {m.handle ?? "—"}
                 </span>
                 <span
-                  className="font-serif text-[16px]"
+                  className="font-display text-[16px]"
                   style={{ color: C.ink }}
                 >
                   {m.name ?? "—"}
@@ -199,7 +199,12 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
                   className="font-mono text-[10px] tracking-wider"
                   style={{ color: C.inkMute }}
                 >
-                  {new Date(m.joined_at).toLocaleDateString()}
+                  {new Date(m.joined_at).toLocaleDateString("en", {
+                    timeZone: "UTC",
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </span>
                 <span
                   className="font-mono text-[11px] font-bold"

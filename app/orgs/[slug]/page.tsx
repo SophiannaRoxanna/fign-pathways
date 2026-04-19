@@ -45,6 +45,7 @@ async function toggleFollow(formData: FormData) {
 }
 
 const dateFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   day: "numeric",
   year: "numeric",
@@ -115,11 +116,11 @@ export default async function OrgPublicPage({
             {org.type} · {org.country_code ?? "pan-african"}
             {org.language ? ` · ${org.language}` : ""}
           </div>
-          <h1 className="mt-3 font-serif italic text-4xl md:text-6xl leading-[1.02]">
+          <h1 className="mt-3 font-display italic text-4xl md:text-6xl leading-[1.02]">
             {org.name}
           </h1>
           {org.tagline && (
-            <p className="mt-4 font-serif italic text-xl md:text-2xl max-w-2xl opacity-90">
+            <p className="mt-4 font-display italic text-xl md:text-2xl max-w-2xl opacity-90">
               {org.tagline}
             </p>
           )}
@@ -178,7 +179,7 @@ export default async function OrgPublicPage({
             className="p-8 text-center"
             style={{ border: `1.5px dashed ${C.ink}55`, color: C.inkSoft }}
           >
-            <p className="italic font-serif text-lg">
+            <p className="italic font-display text-lg">
               Nothing on the calendar right now. Follow to be the first to know.
             </p>
           </div>
@@ -209,7 +210,7 @@ export default async function OrgPublicPage({
                   </span>
                 </div>
                 <h3
-                  className="mt-3 font-serif italic text-xl leading-tight"
+                  className="mt-3 font-display italic text-xl leading-tight"
                   style={{ color: C.ink }}
                 >
                   {it.title}

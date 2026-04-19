@@ -9,6 +9,7 @@ import { PublicSkillsToggle } from "./PublicSkillsToggle";
 import type { Member, Milestone, Organisation } from "@/lib/supabase/types";
 
 const dateFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "long",
   year: "numeric",
 });
@@ -122,7 +123,7 @@ export default async function MePage() {
     <div className="px-6 md:px-10 py-10 md:py-14 max-w-4xl mx-auto">
       <Label>§ your profile · as others see it</Label>
       <h1
-        className="mt-3 font-serif italic text-4xl md:text-5xl leading-[1.05]"
+        className="mt-3 font-display italic text-4xl md:text-5xl leading-[1.05]"
         style={{ color: C.ink }}
       >
         {me.name || me.handle || "You"}
@@ -160,7 +161,7 @@ export default async function MePage() {
 
       {me.description_freetext && (
         <p
-          className="mt-6 font-serif italic text-xl leading-snug max-w-2xl"
+          className="mt-6 font-display italic text-xl leading-snug max-w-2xl"
           style={{ color: C.inkSoft }}
         >
           {me.description_freetext}
@@ -233,7 +234,7 @@ export default async function MePage() {
           <ul className="mt-4 space-y-1 text-sm" style={{ color: C.inkSoft }}>
             {skills.map((s) => (
               <li key={s.id} className="flex items-center justify-between">
-                <span className="font-serif italic">{s.skill_name}</span>
+                <span className="font-display italic">{s.skill_name}</span>
                 <span
                   className="font-mono text-[10px] tracking-[0.18em] uppercase"
                   style={{ color: s.is_public ? C.green : C.inkMute }}

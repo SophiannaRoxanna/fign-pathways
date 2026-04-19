@@ -6,11 +6,12 @@ The Females in Gaming Network (FIGN) platform — a **federation**, not a destin
 
 ## Ground rules
 
-1. **Read `reference/fign-build-plan.md` and the three `reference/fign-*.jsx` prototypes before changing visual direction.** They are the spec.
-2. **Do not drift from the v3 editorial palette** — cream paper, dark ink, coral / green / purple / blue / gold. See Design Context below.
+1. **Read `reference/fign-build-plan.md` and the three `reference/fign-*.jsx` prototypes before changing visual direction.** The prototypes use the old v3 cream/coral palette; the live app now uses the v4 pink+purple palette — see Design Context below.
+2. **Do not drift from the v4 pink+purple palette.** Sophia flagged the cream/coral direction as reading AI-default. The live tokens are in [`lib/design/tokens.ts`](lib/design/tokens.ts).
 3. **Host attribution is the federation signal** — every card, trail entry, lesson must name its host org via `<OrgChip>`. Never let FIGN silently take credit for a member-org's or partner's work.
 4. **Interests, not tracks.** No stages, no career ladders. Members pick tags or write their own words; the system draws the map.
-5. **Before shipping any new surface, check that it works on a slow phone.** Mobile-first, 3G-friendly, SSR the map SVG.
+5. **Before shipping any new surface, check that it works on a slow phone.** Mobile-first, 3G-friendly, SSR expensive bits.
+6. **No side-stripe accents on cards** (impeccable banned pattern). Use leading numbered tokens, filled chips, or accent text.
 
 ## Environment notes
 
@@ -21,101 +22,112 @@ The Females in Gaming Network (FIGN) platform — a **federation**, not a destin
 
 ---
 
-# Design Context
+# Design Context (v4 — brand palette)
 
-*Source: `reference/fign-build-plan.md` §1, §9, §12–17, the three visual prototypes in `reference/`, and the palette in `lib/design/tokens.ts`. Mirrored in `.impeccable.md`.*
+*Supersedes the v3 editorial cream/coral direction. Source: FIGN logo (pink + purple wordmark on white), Sophia's build plan §1 + §9 + §12–17, and the colour migration in this repo. Mirrored in `.impeccable.md`.*
 
 ## Users
 
-**Primary audience.** African women and girls in gaming — players, creators, leaders, singers, streamers, artists, organisers. Many discover FIGN from their existing home (Femmes aux Consoles in Cameroon, Bambina pan-Africa, FIGN chapters in Nigeria, Ghana, Kenya, South Africa). Most open the platform on a phone, often on patchy connections.
+**Primary audience.** African women and girls in gaming — players, creators, leaders, singers, streamers, artists, organisers. Most discover FIGN through their existing home (Femmes aux Consoles in Cameroon, Bambina pan-Africa, FIGN chapters in Nigeria, Ghana, Kenya, South Africa). Phone-first, often on 3G.
 
-**Secondary audiences.** Member-organisation coordinators (who need to amplify their org without feeling assimilated) and partners (studios, tournament operators, sponsors — Nexal, Juju Games, Daimyo Arena, IGDA Foundation — who need a reach channel).
+**Secondary audiences.** Member-org coordinators and partners (studios, tournaments, sponsors).
 
-**Context of use.** Phone-first, bandwidth-constrained. Bilingual reality: French from day one (Cameroon) alongside English; Swahili / Portuguese / Arabic later. WhatsApp-native community; the platform is async-companion to WhatsApp.
+**Context.** Phone-first, bandwidth-constrained. Bilingual (French + English). WhatsApp-native community; platform is async companion.
 
 ## Brand personality
 
-Three words: **editorial · warm · federation-first.**
+Three words: **bold · federation-first · warm-but-direct.**
 
-- **Editorial**, not product-design-system. The app looks like a thoughtfully-set field journal, not a SaaS dashboard.
-- **Warm.** Coral for warmth, green for agency. Copy in Sophia's voice — "open your door," "in your own words," "a federation, not a funnel."
-- **Federation-first.** Every card, trail entry, and lesson names its host org. FIGN is never the default host.
-
-**Emotional goal.** A woman arrives and thinks: *"this was made for me, with care, by people who do the work."*
+**Emotional goal.** A woman arrives and thinks *"this is for me, this is mine, I recognise the energy."*
 
 ## Aesthetic direction
 
-**Visual language: editorial / field-journal.**
+### Palette — pink + purple + white + black
 
-Palette (all in `lib/design/tokens.ts`):
-- `paper #f5ecdc` background, never white
-- `ink #1a1410` text + borders, never pure black
-- `coral #c94a2a` FIGN brand, warmth, `<em>` emphasis
-- `green #1f7a3f` "here", agency, confirmation
-- `purple #6b3a7a` member orgs (FAC, Bambina)
-- `blue #2b5a8a` partners (Nexal, Juju, Daimyo, etc.)
-- `gold #a67c1e` open-source / CC content
-- `ink-soft #4a3d30` body · `ink-mute #8a7a68` captions
-- `paper-alt #ece1cc` card surfaces · `paper-dk #ddcfb4` insets
+Source of truth: [`lib/design/tokens.ts`](lib/design/tokens.ts).
 
-Typography:
-- **Cormorant Garamond italic** for headings, blockquotes, emphatic display.
-- **JetBrains Mono** for labels, numbers, timestamps. All-caps with `tracking: 0.18–0.22em` for labels.
-- No third family.
+**Brand**
+- `coral #FF2F92` — pink; FIGN umbrella; `<em>` on dark; primary CTAs
+- `coralDk #CC1F74` — pink pressed + body `<em>` on light (AA-safe)
+- `coralSoft #FFE0F0` — pink-wash surface
+- `purple #6C4AB6` — member-org chips; secondary brand
+- `purpleSoft #E9DFFF` — purple-wash surface
+- `purpleDeep #4A2A8F` — partner chips (via `blue` alias); pressed states
 
-Compositional cues:
+**Light theme (authed app)**
+- `paper #FEFCFD` canvas · `paperAlt #F7F2F9` cards · `paperDk #EFE9F0` insets · `hairline #E5DBEA` dividers
+- `ink #120B17` text/borders · `inkSoft #3B3540` body · `inkMute #7D7686` captions
+
+**Dark theme (marketing)**
+- `canvasDark #140A1A` · `surfaceDark #221434` · `surfaceDarkAlt #1A0E25`
+- `inkOnDark #F4EDF6` · `inkOnDarkMute #B8ACC5` · `hairlineDark #3A2050`
+
+**System (minimal, a11y only)**
+- `green #2D8653` success · `danger #B32A3C` error — always with text + icon
+
+**Back-compat**: legacy `blue` and `gold` tokens resolve to `purpleDeep` and `purple` respectively, so v3 consumer code doesn't need rewriting.
+
+### Typography (Google Fonts)
+- **Display** (headings, hero, blockquotes): **Bricolage Grotesque**, italic axis
+- **Body** (UI, forms): **Manrope**
+- **Mono** (labels, numbers, timestamps): **Martian Mono**
+- Use `.font-display` / `.font-mono` classes; body inherits Manrope
+
+### Theme split
+- **Dark**: `/` landing, `/signin`. Doors fill with their brand colour on `canvasDark`.
+- **Light**: everything authed. `paper` canvas, `ink` text.
+- Transition from dark `/signin` → light `/onboarding/start` is an intentional threshold cue.
+
+### Compositional rules
 - 1.5px ink borders. Never gray-500, never pure black.
 - No border-radius above 2–3px except tag chips.
-- **Host-colored top strip on every card is the federation signal — non-negotiable.**
-- Grid-paper SVG background on big canvases.
+- **Host-colored top strip on every card is the federation signal** — non-negotiable.
+- Grid-paper SVG on big canvases (interest map).
 - Numbered section headers: `§ 02 · Matched to your map`.
 
-## Design principles (pinned, from build plan §9 + §16)
+## Design principles (pinned)
 
 1. Host org is always visible.
 2. Interests, not tracks.
-3. Adaptation > standardisation — platform bends to the org, not the reverse.
-4. Tailored options after a lesson, never prescription (six doors, pick zero-to-many).
-5. Editorial aesthetic everywhere; no neon, no gradients, no purple-gradient cliché.
-6. Evidence over abstraction — skills are claims backed by real activity.
+3. Adaptation > standardisation.
+4. Tailored options after a lesson, never prescription.
+5. The brand *is* pink + purple. Don't drift toward editorial-muted.
+6. Evidence over abstraction.
 7. Own a core, federate the rest.
 8. Public impact, private roster.
 9. Consent is granular and reversible.
 10. Mobile-first, 3G-friendly.
-11. Language is not optional (French from day one).
+11. Language is not optional.
 12. Deadlines are real, not gamified.
-
-## Theme
-
-**Light only.** Cream paper. Deliberate, not a safe default — high-contrast for patchy bandwidth, editorial aesthetic, and differentiation from the already-saturated dark+neon women-in-gaming category.
+13. No side-stripe accents, no gradient text, no glassmorphism, no KPI-card grids.
 
 ## Accessibility
 
-**WCAG 2.2 AA** minimum on every screen:
-- 4.5:1 text contrast, 3:1 non-text.
-- Full keyboard nav, visible focus rings.
-- No colour-only meaning (host chips carry text labels too).
-- Contrast-verified combos: ink-on-paper 15.8:1, coral-on-paper 4.9:1, green-on-paper 5.2:1. Verify new combos on paper-alt separately.
+**WCAG 2.2 AA floor.** Verified combos:
+- `ink` on `paper` → 15.8:1 ✓
+- `coralDk` on `paper` → 5.2:1 ✓ (body `<em>` uses this on light)
+- `coral` on `paper` → 3.8:1 — *below AA body*; use for display headings + chip backgrounds only
+- `purple` on `paper` → 5.9:1 ✓
+- `inkOnDark` on `canvasDark` → 14:1 ✓
+- `coral` on `canvasDark` → 6.1:1 ✓
+- `purple` on `canvasDark` → 3.2:1 — borderline; keep purple for backgrounds/chips on dark
 
 ## Motion
 
-Keep current motion on. Drift (700ms ease-out, staggered) and pulse are subtle enough to skip `prefers-reduced-motion` wrapping. Anything more aggressive than those must be wrapped.
+Keep current drift + pulse animations on; subtle enough not to gate behind `prefers-reduced-motion`. Anything more aggressive must be wrapped.
 
 ## Anti-references
 
-Stay within FIGN's own aesthetic universe — defined in the build plan §1 and the three prototypes. Explicitly rejected:
-- Walled membership club aesthetics.
-- Rigid career-track systems.
-- Discord / LinkedIn / itch.io / FaceIt clones.
-- KPI-card dashboards.
-- Generic purple-gradient "women in gaming" aesthetic.
+Stay within FIGN's own aesthetic universe. The logo is the canonical brand reference.
 
-The previous fign.org (in `../old-fign-website/`) used `#6C4AB6` + `#FF2F92` — *explicitly replaced* by the v3 editorial palette above. "Similar to fign.org" means the spirit, not the old palette.
+Avoid: generic dashboard aesthetic; dark+neon esports cliché; editorial-cream "AI design"; Riot/Valorant angular chrome; LMS course-card grids; LinkedIn/Discord/FaceIt clones.
+
+The previous fign.org (in `../old-fign-website/`) used `#FF2F92` + `#6C4AB6` — values now adopted here. The new design distils from that, not a copy.
 
 ## What's already built
 
-- Scaffold: Next.js 15 app router + Tailwind v4, Cormorant + JetBrains Mono via `next/font/google`.
+- Scaffold: Next.js 15 + Tailwind v4, Bricolage + Manrope + Martian Mono via `next/font/google`.
 - Shared primitives: `components/ui/{Label, Rule, SectionHead}.tsx`, `components/org/OrgChip.tsx`.
-- Pages: `/` (three-door landing), `/signin`, `/onboarding/start`, `/map`, `/events`, `/people`, `/orgs-follow`, `/me`, `/lessons/[slug]`, `/orgs/[slug]` (public), `/admin/{orgs,items,lessons,members}`.
+- Pages: `/` (dark landing), `/signin` (dark), `/onboarding/start`, `/map`, `/events`, `/people`, `/orgs-follow`, `/me`, `/lessons/[slug]`, `/orgs/[slug]` (public), `/admin/{orgs,items,lessons,members}`.
 - Learning-layer components: `SkillsLab`, `LessonDoneModal`, `MilestonesPanel`, `GrowthGlance`, `SkillsBars`.
-- Supabase: 5 migrations, 8 RPCs (`record_activity`, `complete_lesson`, `log_lesson_option`, `update_skills_from_activity`, `match_items_for_member`, `match_lessons_for_member`, `extract_tags_simple`, `onboard_member`), RLS throughout.
+- Supabase: 5 migrations, 8 RPCs, RLS throughout.

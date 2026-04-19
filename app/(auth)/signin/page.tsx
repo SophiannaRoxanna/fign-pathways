@@ -32,24 +32,30 @@ export default function SignInPage() {
   return (
     <div
       className="min-h-screen flex items-center justify-center px-6"
-      style={{ background: C.paper, color: C.ink }}
+      style={{ background: C.canvasDark, color: C.inkOnDark }}
     >
       <div
         className="w-full max-w-md p-8"
-        style={{ background: C.paperAlt, border: `2px solid ${C.ink}` }}
+        style={{
+          background: C.surfaceDark,
+          border: `2px solid ${C.hairlineDark}`,
+        }}
       >
         <Label color={C.coral}>FIGN · sign in</Label>
-        <h1 className="mt-3 font-serif text-4xl italic leading-tight">
+        <h1
+          className="mt-3 font-display text-4xl italic leading-tight"
+          style={{ color: C.inkOnDark }}
+        >
           Open your <em style={{ color: C.coral }}>door</em>.
         </h1>
-        <p className="mt-4 text-sm" style={{ color: C.inkSoft }}>
+        <p className="mt-4 text-sm" style={{ color: C.inkOnDarkMute }}>
           We email you a one-time magic link. No passwords.
         </p>
 
         {status !== "sent" ? (
           <form onSubmit={submit} className="mt-6 space-y-4">
             <div>
-              <Label>email</Label>
+              <Label color={C.inkOnDarkMute}>email</Label>
               <input
                 type="email"
                 required
@@ -58,9 +64,9 @@ export default function SignInPage() {
                 placeholder="you@fign.org"
                 className="mt-1 w-full px-3 py-2 text-base"
                 style={{
-                  background: C.paper,
-                  color: C.ink,
-                  border: `1.5px solid ${C.ink}`,
+                  background: C.surfaceDarkAlt,
+                  color: C.inkOnDark,
+                  border: `1.5px solid ${C.hairlineDark}`,
                 }}
               />
             </div>
@@ -69,8 +75,8 @@ export default function SignInPage() {
               disabled={status === "sending"}
               className="w-full font-mono text-[11px] tracking-[0.2em] uppercase font-bold px-4 py-3"
               style={{
-                background: C.ink,
-                color: C.paper,
+                background: C.coral,
+                color: C.inkOnDark,
                 opacity: status === "sending" ? 0.6 : 1,
                 cursor: status === "sending" ? "not-allowed" : "pointer",
               }}
@@ -78,17 +84,23 @@ export default function SignInPage() {
               {status === "sending" ? "sending..." : "send magic link →"}
             </button>
             {errorMsg && (
-              <p className="text-sm" style={{ color: C.coralDk }}>
+              <p className="text-sm" style={{ color: C.coral }}>
                 {errorMsg}
               </p>
             )}
           </form>
         ) : (
+          // Success state: light pink-wash card on the dark canvas. A small
+          // threshold cue that "you've passed sign-in, the app starts soon."
           <div
             className="mt-6 p-4"
-            style={{ background: C.greenLt, border: `1.5px solid ${C.green}` }}
+            style={{
+              background: C.coralSoft,
+              color: C.ink,
+              border: `1.5px solid ${C.coral}`,
+            }}
           >
-            <Label color={C.green}>check your inbox</Label>
+            <Label color={C.coralDk}>check your inbox</Label>
             <p className="mt-2 text-sm" style={{ color: C.ink }}>
               A link is on its way to <strong>{email}</strong>. Click it and
               you&apos;ll be in.
@@ -98,7 +110,7 @@ export default function SignInPage() {
 
         <p
           className="mt-6 pt-6 text-xs italic"
-          style={{ color: C.inkMute, borderTop: `1px solid ${C.ink}22` }}
+          style={{ color: C.inkOnDarkMute, borderTop: `1px solid ${C.hairlineDark}` }}
         >
           WhatsApp sign-in coming later in 2026 — email for now works
           everywhere.

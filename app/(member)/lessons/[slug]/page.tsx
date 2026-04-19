@@ -9,6 +9,7 @@ import type { Organisation } from "@/lib/supabase/types";
 import { LessonFinisher } from "./LessonFinisher";
 
 const dateFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   day: "numeric",
   year: "numeric",
@@ -94,7 +95,6 @@ export default async function LessonReaderPage({
     };
   }
 
-  let takeItLiveItem: { id: string; title: string } | null = null;
   if (typedLesson.tags.length > 0) {
     const { data: items } = await supabase
       .from("items")
@@ -103,7 +103,6 @@ export default async function LessonReaderPage({
       .or("registration_preference.eq.fign_hosted,registration_url.not.is.null")
       .limit(1);
     if (items && items.length > 0) {
-      takeItLiveItem = { id: items[0].id, title: items[0].title };
       doorIds.push("take_it_live");
       doorOverrides.take_it_live = {
         title: items[0].title,
@@ -173,14 +172,14 @@ export default async function LessonReaderPage({
       <article className="max-w-3xl mx-auto px-6 md:px-10 py-10 md:py-14">
         <Label>§ lesson · {typedLesson.format.replace(/_/g, " ")}</Label>
         <h1
-          className="mt-3 font-serif italic text-4xl md:text-5xl leading-[1.05]"
+          className="mt-3 font-display italic text-4xl md:text-5xl leading-[1.05]"
           style={{ color: C.ink }}
         >
           {typedLesson.title}
         </h1>
         {typedLesson.hook && (
           <p
-            className="mt-4 font-serif italic text-xl md:text-2xl leading-snug"
+            className="mt-4 font-display italic text-xl md:text-2xl leading-snug"
             style={{ color: C.inkSoft }}
           >
             {typedLesson.hook}

@@ -223,7 +223,7 @@ export function OrgForm({
           style={{ background: brandColor ?? C.ink, color: C.paper }}
         >
           <div
-            className="font-serif text-2xl italic leading-tight"
+            className="font-display text-2xl italic leading-tight"
             style={{ color: C.paper }}
           >
             {previewOrg.name}

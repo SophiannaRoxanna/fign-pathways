@@ -53,7 +53,7 @@ export function PeoplePanel({ people }: { people: PeopleCard[] }) {
               <div className="flex items-start justify-between mb-2 gap-2">
                 <div>
                   <div
-                    className="font-serif text-lg italic"
+                    className="font-display text-lg italic"
                     style={{ color: C.ink }}
                   >
                     {p.name}

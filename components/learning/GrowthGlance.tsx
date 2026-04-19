@@ -5,6 +5,7 @@ import { SectionHead } from "@/components/ui/SectionHead";
 type Snapshot = { as_of: string; lines: string[] };
 
 const asOfFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   year: "numeric",
 });
@@ -76,7 +77,7 @@ export function GrowthGlance({
                     >
                       ·
                     </span>
-                    <span className="font-serif italic">{s}</span>
+                    <span className="font-display italic">{s}</span>
                   </li>
                 ))}
               </ul>
@@ -108,7 +109,7 @@ export function GrowthGlance({
                     >
                       ·
                     </span>
-                    <span className="font-serif italic">{s}</span>
+                    <span className="font-display italic">{s}</span>
                   </li>
                 ))}
               </ul>

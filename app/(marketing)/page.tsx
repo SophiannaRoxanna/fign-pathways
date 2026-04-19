@@ -13,46 +13,49 @@ export default function LandingPage() {
 
   return (
     <div
-      style={{ background: C.paper, color: C.ink, minHeight: "100vh" }}
+      style={{ background: C.canvasDark, color: C.inkOnDark, minHeight: "100vh" }}
       className="w-full"
     >
       {/* Top bar */}
       <header
         className="px-6 md:px-12 py-5 flex items-center justify-between"
-        style={{ borderBottom: `1.5px solid ${C.ink}` }}
+        style={{ borderBottom: `1.5px solid ${C.hairlineDark}` }}
       >
         <div className="flex items-center gap-4 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold">
           <span style={{ color: C.coral }}>FIGN</span>
-          <span style={{ opacity: 0.3 }}>·</span>
-          <span>Females in Gaming Network</span>
+          <span style={{ opacity: 0.4, color: C.inkOnDarkMute }}>·</span>
+          <span style={{ color: C.inkOnDark }}>Females in Gaming Network</span>
           <span
             className="hidden md:inline font-mono text-[9px] tracking-widest"
-            style={{ color: C.inkMute }}
+            style={{ color: C.inkOnDarkMute }}
           >
             pan-African umbrella · est. 2025
           </span>
         </div>
         <div
           className="hidden md:flex items-center gap-6 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
-          style={{ color: C.inkSoft }}
+          style={{ color: C.inkOnDarkMute }}
         >
           <span>Events</span>
           <span>Orgs</span>
           <span>Impact</span>
-          <a href="/signin" style={{ color: C.inkSoft }}>Log in →</a>
+          <a href="/signin" style={{ color: C.coral }}>Log in →</a>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="px-6 md:px-12 pt-16 pb-10 max-w-[1280px] mx-auto drift-0">
-        <Label>the point</Label>
-        <h1 className="mt-4 font-serif text-6xl md:text-[104px] leading-[0.92]">
+      <section className="px-6 md:px-12 pt-16 pb-10 max-w-7xl mx-auto drift-0">
+        <Label color={C.inkOnDarkMute}>the point</Label>
+        <h1
+          className="mt-4 font-display text-6xl md:text-[104px] leading-[0.92]"
+          style={{ color: C.inkOnDark }}
+        >
           Africa won&apos;t stay a <br />
           <em style={{ color: C.coral }}>consumer</em> of gaming.
         </h1>
         <p
           className="mt-6 text-lg md:text-xl max-w-3xl leading-relaxed"
-          style={{ color: C.inkSoft }}
+          style={{ color: C.inkOnDarkMute }}
         >
           FIGN is the pan-African umbrella for women and girls in gaming — players,
           creators, leaders, singers, streamers, artists, organisers. We don&apos;t
@@ -62,7 +65,7 @@ export default function LandingPage() {
 
         {/* Chips */}
         <div className="mt-8 flex flex-wrap items-center gap-2">
-          <Label>pick your door:</Label>
+          <Label color={C.inkOnDarkMute}>pick your door:</Label>
           {DOORS.map((d) => (
             <button
               key={d.key}
@@ -70,8 +73,8 @@ export default function LandingPage() {
               className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold px-3 py-2 cursor-pointer"
               style={{
                 background: openDoor === d.key ? d.color : "transparent",
-                color: openDoor === d.key ? C.paper : C.ink,
-                border: `1.5px solid ${openDoor === d.key ? d.color : C.ink}`,
+                color: openDoor === d.key ? C.inkOnDark : C.inkOnDark,
+                border: `1.5px solid ${openDoor === d.key ? d.color : C.hairlineDark}`,
               }}
             >
               {d.number} · {d.kicker.split(" ").slice(-3).join(" ")}
@@ -81,7 +84,7 @@ export default function LandingPage() {
       </section>
 
       {/* Doors */}
-      <section className="px-6 md:px-12 max-w-[1280px] mx-auto space-y-4 drift-1">
+      <section className="px-6 md:px-12 max-w-7xl mx-auto space-y-4 drift-1">
         {DOORS.map((d) => (
           <Door
             key={d.key}
@@ -97,13 +100,13 @@ export default function LandingPage() {
       <OrgsStrip />
 
       {/* Founder + contact */}
-      <section className="mt-20 px-6 md:px-12 max-w-[1280px] mx-auto pb-20 drift-4">
+      <section className="mt-20 px-6 md:px-12 max-w-7xl mx-auto pb-20 drift-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
           <div className="md:col-span-8">
-            <Label>a note from the founder</Label>
+            <Label color={C.inkOnDarkMute}>a note from the founder</Label>
             <blockquote
-              className="mt-4 font-serif text-2xl md:text-3xl italic leading-snug max-w-3xl"
-              style={{ color: C.ink }}
+              className="mt-4 font-display text-2xl md:text-3xl italic leading-snug max-w-3xl"
+              style={{ color: C.inkOnDark }}
             >
               &ldquo;Most platforms ask women to fit a career they already picked.
               FIGN does the opposite — we start with what she loves, show her where
@@ -119,30 +122,33 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="md:col-span-4">
-            <Label>get in</Label>
-            <div className="mt-3 space-y-2 text-sm" style={{ color: C.ink }}>
+            <Label color={C.inkOnDarkMute}>get in</Label>
+            <div className="mt-3 space-y-2 text-sm" style={{ color: C.inkOnDark }}>
               <div>
-                <span style={{ color: C.inkMute }}>email ·</span> sophia@fign.org
+                <span style={{ color: C.inkOnDarkMute }}>email ·</span> sophia@fign.org
               </div>
               <div>
-                <span style={{ color: C.inkMute }}>web ·</span> fign.org
+                <span style={{ color: C.inkOnDarkMute }}>web ·</span> fign.org
               </div>
               <div>
-                <span style={{ color: C.inkMute }}>whatsapp ·</span> community link
+                <span style={{ color: C.inkOnDarkMute }}>whatsapp ·</span> community link
                 on fign.org
               </div>
             </div>
-            <div className="mt-6 pt-4" style={{ borderTop: `1px solid ${C.ink}22` }}>
-              <Label>part of the broader journey</Label>
+            <div className="mt-6 pt-4" style={{ borderTop: `1px solid ${C.hairlineDark}` }}>
+              <Label color={C.inkOnDarkMute}>part of the broader journey</Label>
               <a
                 href="https://esports-combine.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 block text-sm"
-                style={{ color: C.ink }}
+                style={{ color: C.inkOnDark }}
               >
                 esports-combine.vercel.app →
-                <span className="block text-xs italic mt-1" style={{ color: C.inkMute }}>
+                <span
+                  className="block text-xs italic mt-1"
+                  style={{ color: C.inkOnDarkMute }}
+                >
                   where every woman on the competitor track also begins.
                 </span>
               </a>
@@ -153,9 +159,9 @@ export default function LandingPage() {
 
       <footer
         className="px-6 md:px-12 py-6 flex items-center justify-between font-mono text-[10px] tracking-[0.22em] uppercase font-semibold"
-        style={{ borderTop: `1.5px solid ${C.ink}`, color: C.inkSoft }}
+        style={{ borderTop: `1.5px solid ${C.hairlineDark}`, color: C.inkOnDarkMute }}
       >
-        <span>FIGN · Females in Gaming Network · landing v1</span>
+        <span>FIGN · Females in Gaming Network · landing v2</span>
         <span>PLAY · CREATE · LEAD</span>
       </footer>
     </div>

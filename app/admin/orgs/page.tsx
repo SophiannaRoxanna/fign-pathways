@@ -52,7 +52,7 @@ export default async function AdminOrgsPage() {
         </div>
         {rows.length === 0 ? (
           <div
-            className="px-5 py-8 text-center italic font-serif text-lg"
+            className="px-5 py-8 text-center italic font-display text-lg"
             style={{ color: C.inkMute }}
           >
             No organisations yet. <Link href="/admin/orgs/new" style={{ color: C.coral }}>Add the first one →</Link>
@@ -69,7 +69,7 @@ export default async function AdminOrgsPage() {
               }}
             >
               <OrgChip org={o} />
-              <span className="font-serif text-[17px]" style={{ color: C.ink }}>
+              <span className="font-display text-[17px]" style={{ color: C.ink }}>
                 {o.name}
                 {o.tagline ? (
                   <span

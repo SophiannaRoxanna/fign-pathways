@@ -1,37 +1,73 @@
 @import "tailwindcss";
 
+/* FIGN v4 palette — pink + purple + white + black. See lib/design/tokens.ts. */
 :root {
-  --color-paper: #f5ecdc;
-  --color-paper-alt: #ece1cc;
-  --color-paper-dk: #ddcfb4;
-  --color-ink: #1a1410;
-  --color-ink-soft: #4a3d30;
-  --color-ink-mute: #8a7a68;
-  --color-coral: #c94a2a;
-  --color-coral-dk: #8a2e14;
-  --color-green: #1f7a3f;
-  --color-green-lt: #e8f4ec;
-  --color-blue: #2b5a8a;
-  --color-purple: #6b3a7a;
-  --color-gold: #a67c1e;
+  /* Light theme (authed app) */
+  --color-paper: #FEFCFD;
+  --color-paper-alt: #F7F2F9;
+  --color-paper-dk: #EFE9F0;
+  --color-hairline: #E5DBEA;
+
+  --color-ink: #120B17;
+  --color-ink-soft: #3B3540;
+  --color-ink-mute: #7D7686;
+
+  /* Brand — pink */
+  --color-coral: #FF2F92;
+  --color-coral-dk: #CC1F74;
+  --color-coral-soft: #FFE0F0;
+
+  /* Brand — purple */
+  --color-purple: #6C4AB6;
+  --color-purple-soft: #E9DFFF;
+  --color-purple-deep: #4A2A8F;
+
+  /* Remapped for back-compat with v3 token names */
+  --color-blue: #4A2A8F;
+  --color-gold: #6C4AB6;
+  --color-green: #2D8653;
+  --color-green-lt: #FFE0F0;
+
+  /* System */
+  --color-danger: #B32A3C;
+
+  /* Dark theme (marketing) */
+  --color-canvas-dark: #140A1A;
+  --color-surface-dark: #221434;
+  --color-surface-dark-alt: #1A0E25;
+  --color-ink-on-dark: #F4EDF6;
+  --color-ink-on-dark-mute: #B8ACC5;
+  --color-hairline-dark: #3A2050;
 }
 
 @theme inline {
   --color-paper: var(--color-paper);
   --color-paper-alt: var(--color-paper-alt);
   --color-paper-dk: var(--color-paper-dk);
+  --color-hairline: var(--color-hairline);
   --color-ink: var(--color-ink);
   --color-ink-soft: var(--color-ink-soft);
   --color-ink-mute: var(--color-ink-mute);
   --color-coral: var(--color-coral);
   --color-coral-dk: var(--color-coral-dk);
+  --color-coral-soft: var(--color-coral-soft);
+  --color-purple: var(--color-purple);
+  --color-purple-soft: var(--color-purple-soft);
+  --color-purple-deep: var(--color-purple-deep);
+  --color-blue: var(--color-blue);
+  --color-gold: var(--color-gold);
   --color-green: var(--color-green);
   --color-green-lt: var(--color-green-lt);
-  --color-blue: var(--color-blue);
-  --color-purple: var(--color-purple);
-  --color-gold: var(--color-gold);
-  --font-serif: var(--font-cormorant), Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --color-danger: var(--color-danger);
+  --color-canvas-dark: var(--color-canvas-dark);
+  --color-surface-dark: var(--color-surface-dark);
+  --color-surface-dark-alt: var(--color-surface-dark-alt);
+  --color-ink-on-dark: var(--color-ink-on-dark);
+  --color-ink-on-dark-mute: var(--color-ink-on-dark-mute);
+  --color-hairline-dark: var(--color-hairline-dark);
+  --font-display: var(--font-bricolage), Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, monospace;
 }
 
 html,
@@ -41,7 +77,7 @@ body {
 }
 
 body {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -50,8 +86,15 @@ body {
   font-family: var(--font-mono);
 }
 
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+/* Alias: some early files were written with font-serif before the rename */
 .font-serif {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
 }
 
 @keyframes drift {

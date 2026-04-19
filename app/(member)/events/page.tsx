@@ -2,7 +2,6 @@ import Link from "next/link";
 import { C } from "@/lib/design/tokens";
 import { Label } from "@/components/ui/Label";
 import { SectionHead } from "@/components/ui/SectionHead";
-import { OrgChip } from "@/components/org/OrgChip";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import type { Item, ItemKind, Organisation } from "@/lib/supabase/types";
 
@@ -29,6 +28,7 @@ const COUNTRIES: { code: string; name: string }[] = [
 ];
 
 const dateFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   day: "numeric",
 });
@@ -145,7 +145,7 @@ export default async function EventsPage({
           className="p-8 text-center"
           style={{ border: `1.5px dashed ${C.ink}55`, color: C.inkSoft }}
         >
-          <p className="italic font-serif text-lg">
+          <p className="italic font-display text-lg">
             Nothing matches these filters yet. Loosen them or come back tomorrow.
           </p>
         </div>
@@ -173,7 +173,7 @@ export default async function EventsPage({
                 </div>
                 <div className="p-4 flex-1 flex flex-col">
                   <h3
-                    className="font-serif italic text-xl leading-tight"
+                    className="font-display italic text-xl leading-tight"
                     style={{ color: C.ink }}
                   >
                     {it.title}

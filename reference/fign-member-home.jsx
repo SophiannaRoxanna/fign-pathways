@@ -431,7 +431,7 @@ function LessonDoneModal({ lesson, onClose }) {
           {options.map((o, i) => (
             <button
               key={i}
-              className="p-4 text-left transition-all hover:translate-y-[-2px]"
+              className="p-4 text-left transition-all hover:-translate-y-0.5"
               style={{ background: C.paperAlt, border: `1.5px solid ${C.ink}` }}
             >
               <div className="flex items-center justify-between mb-2">
@@ -775,7 +775,7 @@ export default function FIGNMemberHome() {
         </div>
       </header>
 
-      <main className="px-6 md:px-10 py-10 max-w-[1280px] mx-auto">
+      <main className="px-6 md:px-10 py-10 max-w-7xl mx-auto">
         {/* Hero */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
           <div className="md:col-span-8">

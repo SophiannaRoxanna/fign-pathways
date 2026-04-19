@@ -27,6 +27,7 @@ import { ActivityTrail, type ActivityRow } from "@/components/member/ActivityTra
 import type { OrgChipData } from "@/components/org/OrgChip";
 
 const joinedFmt = new Intl.DateTimeFormat("en", {
+  timeZone: "UTC",
   month: "short",
   year: "numeric",
 });
@@ -273,7 +274,7 @@ export default async function MapPage() {
         <div className="md:col-span-8">
           <Label>§ 01 · Your map · joined {joinedLabel}</Label>
           <h1
-            className="mt-3 font-serif text-5xl md:text-7xl leading-[0.95]"
+            className="mt-3 font-display text-5xl md:text-7xl leading-[0.95]"
             style={{ color: C.ink }}
           >
             Hello, <em style={{ color: C.coral }}>{firstName}</em>.
@@ -291,7 +292,7 @@ export default async function MapPage() {
           <div className="md:col-span-4">
             <Label>in your own words</Label>
             <blockquote
-              className="mt-2 font-serif italic leading-relaxed p-4"
+              className="mt-2 font-display italic leading-relaxed p-4"
               style={{
                 color: C.ink,
                 background: C.paperAlt,

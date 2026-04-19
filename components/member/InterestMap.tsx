@@ -96,7 +96,7 @@ export function InterestMap({
         x={cx}
         y={cy - 4}
         textAnchor="middle"
-        className="font-serif"
+        className="font-display"
         fontSize="18"
         fontStyle="italic"
         fill={C.paper}
@@ -130,7 +130,7 @@ export function InterestMap({
             x={n.x}
             y={n.y + 5}
             textAnchor="middle"
-            className="font-serif"
+            className="font-display"
             fontStyle="italic"
             fontSize="16"
             fill={C.paper}
@@ -154,7 +154,7 @@ export function InterestMap({
             x={n.x}
             y={n.y + 4}
             textAnchor="middle"
-            className="font-serif"
+            className="font-display"
             fontStyle="italic"
             fontSize="14"
             fill={C.green}
