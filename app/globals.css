@@ -118,3 +118,16 @@ body {
   50%      { opacity: 0.22; }
 }
 .pulse { animation: pulse-glow 2.4s ease-in-out infinite; }
+
+/* Accessibility: respect prefers-reduced-motion for decorative animations. */
+@media (prefers-reduced-motion: reduce) {
+  .drift-0,
+  .drift-1,
+  .drift-2,
+  .drift-3,
+  .drift-4,
+  .pulse,
+  .pulse-ring {
+    animation: none;
+  }
+}

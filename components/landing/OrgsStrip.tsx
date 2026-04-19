@@ -17,8 +17,8 @@ export function OrgsStrip() {
         </div>
         <a
           href="mailto:sophia@fign.org?subject=FIGN%20Org%20Inquiry"
-          className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold"
-          style={{ color: C.coral }}
+          className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4"
+          style={{ color: C.coral, outlineColor: C.coral }}
         >
           + your org →
         </a>

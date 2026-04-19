@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { C } from "@/lib/design/tokens";
 import { Label } from "@/components/ui/Label";
@@ -22,25 +23,29 @@ export default function LandingPage() {
         className="px-6 md:px-12 py-5 flex items-center justify-between"
         style={{ borderBottom: `1.5px solid ${C.hairlineDark}` }}
       >
-        <div className="flex items-center gap-4 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold">
+        <div className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold">
           <Logo href="/" height={32} priority />
-          <span style={{ opacity: 0.4, color: C.inkOnDarkMute }}>·</span>
-          <span style={{ color: C.inkOnDark }}>Females in Gaming Network</span>
           <span
             className="hidden md:inline font-mono text-[9px] tracking-widest"
             style={{ color: C.inkOnDarkMute }}
           >
-            pan-African umbrella · est. 2025
+            · pan-African umbrella · est. 2025
           </span>
         </div>
         <div
           className="hidden md:flex items-center gap-6 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
           style={{ color: C.inkOnDarkMute }}
         >
-          <span>Events</span>
-          <span>Orgs</span>
-          <span>Impact</span>
-          <a href="/signin" style={{ color: C.coral }}>Log in →</a>
+          <span style={{ opacity: 0.5 }} title="coming soon">Events</span>
+          <span style={{ opacity: 0.5 }} title="coming soon">Orgs</span>
+          <span style={{ opacity: 0.5 }} title="coming soon">Impact</span>
+          <Link
+            href="/signin"
+            className="transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4"
+            style={{ color: C.coral, outlineColor: C.coral }}
+          >
+            Log in →
+          </Link>
         </div>
       </header>
 
@@ -48,7 +53,7 @@ export default function LandingPage() {
       <section className="px-6 md:px-12 pt-16 pb-10 max-w-7xl mx-auto drift-0">
         <Label color={C.inkOnDarkMute}>the point</Label>
         <h1
-          className="mt-4 font-display text-6xl md:text-[104px] leading-[0.92]"
+          className="mt-4 font-display text-6xl md:text-[104px] leading-[0.92] text-balance"
           style={{ color: C.inkOnDark }}
         >
           Africa won&apos;t stay a <br />
@@ -67,20 +72,25 @@ export default function LandingPage() {
         {/* Chips */}
         <div className="mt-8 flex flex-wrap items-center gap-2">
           <Label color={C.inkOnDarkMute}>pick your door:</Label>
-          {DOORS.map((d) => (
-            <button
-              key={d.key}
-              onClick={() => setOpenDoor(d.key)}
-              className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold px-3 py-2 cursor-pointer"
-              style={{
-                background: openDoor === d.key ? d.color : "transparent",
-                color: openDoor === d.key ? C.inkOnDark : C.inkOnDark,
-                border: `1.5px solid ${openDoor === d.key ? d.color : C.hairlineDark}`,
-              }}
-            >
-              {d.number} · {d.kicker.split(" ").slice(-3).join(" ")}
-            </button>
-          ))}
+          {DOORS.map((d) => {
+            const active = openDoor === d.key;
+            return (
+              <button
+                key={d.key}
+                onClick={() => setOpenDoor(d.key)}
+                aria-pressed={active}
+                className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold px-3 py-2 cursor-pointer transition-colors hover:border-current focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{
+                  background: active ? d.color : "transparent",
+                  color: active ? C.inkOnDark : C.inkOnDark,
+                  border: `1.5px solid ${active ? d.color : C.hairlineDark}`,
+                  outlineColor: d.color,
+                }}
+              >
+                {d.number} · {d.kicker.split(" ").slice(-3).join(" ")}
+              </button>
+            );
+          })}
         </div>
       </section>
 
@@ -142,12 +152,12 @@ export default function LandingPage() {
                 href="https://esports-combine.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 block text-sm"
-                style={{ color: C.inkOnDark }}
+                className="mt-2 block text-sm transition-colors hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4"
+                style={{ color: C.inkOnDark, outlineColor: C.coral }}
               >
                 esports-combine.vercel.app →
                 <span
-                  className="block text-xs italic mt-1"
+                  className="block text-xs italic mt-1 no-underline"
                   style={{ color: C.inkOnDarkMute }}
                 >
                   where every woman on the competitor track also begins.

@@ -16,17 +16,18 @@ export function Door({ door, isOpen, onOpen, onClose }: Props) {
   // their brand colour. Border steps from hairlineDark → door.color on open.
   return (
     <div
-      className="relative transition-all"
+      className="relative transition-colors"
       style={{
         background: isOpen ? door.color : C.surfaceDark,
-        color: isOpen ? C.inkOnDark : C.inkOnDark,
+        color: C.inkOnDark,
         border: `2px solid ${isOpen ? door.color : C.hairlineDark}`,
       }}
     >
       <button
         onClick={isOpen ? onClose : onOpen}
-        className="w-full text-left p-6 md:p-8 cursor-pointer"
-        style={{ color: "inherit" }}
+        aria-expanded={isOpen}
+        className="w-full text-left p-6 md:p-8 cursor-pointer transition-colors focus-visible:outline-2 focus-visible:-outline-offset-4"
+        style={{ color: "inherit", outlineColor: isOpen ? C.inkOnDark : door.color }}
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-baseline gap-4">
@@ -47,7 +48,7 @@ export function Door({ door, isOpen, onOpen, onClose }: Props) {
           </div>
           <span
             className="font-mono text-xs tracking-[0.2em] uppercase font-bold shrink-0 mt-2"
-            style={{ opacity: 0.75 }}
+            style={{ color: isOpen ? C.inkOnDark : C.inkOnDarkMute }}
           >
             {isOpen ? "— close" : "open →"}
           </span>
@@ -82,8 +83,8 @@ export function Door({ door, isOpen, onOpen, onClose }: Props) {
           <div className="mt-7 flex flex-wrap items-center gap-4">
             <a
               href={door.href}
-              className="font-mono text-[11px] tracking-[0.2em] uppercase font-bold px-5 py-3 inline-block"
-              style={{ background: C.inkOnDark, color: door.color }}
+              className="font-mono text-[11px] tracking-[0.2em] uppercase font-bold px-5 py-3 inline-block transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ background: C.inkOnDark, color: door.color, outlineColor: C.inkOnDark }}
             >
               {door.cta} →
             </a>
