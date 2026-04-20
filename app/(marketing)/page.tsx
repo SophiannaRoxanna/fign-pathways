@@ -32,21 +32,13 @@ export default function LandingPage() {
             · pan-African umbrella · est. 2025
           </span>
         </div>
-        <div
-          className="hidden md:flex items-center gap-6 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
-          style={{ color: C.inkOnDarkMute }}
+        <Link
+          href="/signin"
+          className="font-mono text-[11px] tracking-[0.2em] uppercase font-semibold transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4"
+          style={{ color: C.coral, outlineColor: C.coral }}
         >
-          <span style={{ opacity: 0.5 }} title="coming soon">Events</span>
-          <span style={{ opacity: 0.5 }} title="coming soon">Orgs</span>
-          <span style={{ opacity: 0.5 }} title="coming soon">Impact</span>
-          <Link
-            href="/signin"
-            className="transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4"
-            style={{ color: C.coral, outlineColor: C.coral }}
-          >
-            Log in →
-          </Link>
-        </div>
+          Log in →
+        </Link>
       </header>
 
       {/* Hero */}

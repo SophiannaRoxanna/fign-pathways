@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { C } from "@/lib/design/tokens";
 import { Logo } from "@/components/ui/Logo";
+import { MemberNav } from "@/components/member/MemberNav";
 
 export default async function MemberLayout({
   children,
@@ -40,24 +41,11 @@ export default async function MemberLayout({
           href="/map"
           className="flex items-center gap-3 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
           style={{ color: C.ink }}
-          aria-label="FIGN — your map"
+          aria-label="FIGN home"
         >
           <Logo height={28} priority />
-          <span style={{ opacity: 0.3 }}>·</span>
-          <span>Your map</span>
         </Link>
-        <nav
-          className="hidden md:flex items-center gap-6 font-mono text-[11px] tracking-[0.2em] uppercase font-semibold"
-          style={{ color: C.inkMute }}
-        >
-          <Link href="/map" style={{ color: C.ink }}>
-            Map
-          </Link>
-          <Link href="/events">Events</Link>
-          <Link href="/people">People</Link>
-          <Link href="/orgs-follow">Orgs</Link>
-          <Link href="/me">Trail</Link>
-        </nav>
+        <MemberNav />
         <div className="flex items-center gap-3">
           <Link
             href="/me"

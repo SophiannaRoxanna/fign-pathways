@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { C } from "@/lib/design/tokens";
 import { Logo } from "@/components/ui/Logo";
+import { AdminNav } from "@/components/admin/AdminNav";
 
 // Admin shell. Umbrella-admin only — anyone else bounces to /map.
 export default async function AdminLayout({
@@ -48,16 +49,7 @@ export default async function AdminLayout({
             <span style={{ opacity: 0.3 }}>·</span>
             <span>Admin desk</span>
           </Link>
-          <nav
-            className="hidden md:flex items-center gap-5 font-mono text-[11px] tracking-[0.18em] uppercase font-semibold"
-            style={{ color: C.inkSoft }}
-          >
-            <Link href="/admin">Dashboard</Link>
-            <Link href="/admin/orgs">Orgs</Link>
-            <Link href="/admin/items">Items</Link>
-            <Link href="/admin/lessons">Lessons</Link>
-            <Link href="/admin/members">Members</Link>
-          </nav>
+          <AdminNav />
         </div>
         <div className="flex items-center gap-4">
           <Link
@@ -76,7 +68,7 @@ export default async function AdminLayout({
           </span>
         </div>
       </header>
-      <main className="px-6 md:px-10 py-10 max-w-[1280px] mx-auto">
+      <main className="px-6 md:px-10 py-10 max-w-7xl mx-auto">
         {children}
       </main>
     </div>
