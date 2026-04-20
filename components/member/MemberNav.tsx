@@ -7,7 +7,8 @@ import { C } from "@/lib/design/tokens";
 type NavItem = { href: string; label: string; match?: (p: string) => boolean };
 
 const ITEMS: NavItem[] = [
-  { href: "/map",          label: "Map",    match: (p) => p === "/map" || p.startsWith("/lessons") },
+  { href: "/map",          label: "Map",    match: (p) => p === "/map" },
+  { href: "/learn",        label: "Learn",  match: (p) => p.startsWith("/learn") || p.startsWith("/lessons") },
   { href: "/events",       label: "Events", match: (p) => p.startsWith("/events") },
   { href: "/people",       label: "People", match: (p) => p.startsWith("/people") },
   { href: "/orgs-follow",  label: "Orgs",   match: (p) => p.startsWith("/orgs-follow") || p.startsWith("/orgs/") },

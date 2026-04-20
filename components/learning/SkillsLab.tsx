@@ -123,12 +123,13 @@ export function SkillsLab({ lessons }: { lessons: SkillsLabLesson[] }) {
         >
           · 42 more lessons matched to your map
         </span>
-        <span
-          className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold"
-          style={{ color: C.coral }}
+        <Link
+          href="/learn"
+          className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4"
+          style={{ color: C.coral, outlineColor: C.coral }}
         >
           Browse the full library · /learn →
-        </span>
+        </Link>
       </div>
     </section>
   );
