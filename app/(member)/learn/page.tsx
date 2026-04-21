@@ -36,34 +36,53 @@ export default async function LearnPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/signin");
 
-  const [lessonsRes, compsRes, curriculaRes, curLessonsRes, skillsRes, orgsRes] =
-    await Promise.all([
-      supabase
-        .from("lessons")
-        .select("*, host:organisations(*)")
-        .eq("status", "published")
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("lesson_completions")
-        .select("lesson_id")
-        .eq("member_id", user.id),
-      supabase
-        .from("curricula")
-        .select("id, slug, title, blurb, tags, co_author_org_ids")
-        .order("created_at"),
-      supabase
-        .from("curriculum_lessons")
-        .select("curriculum_id, position, lesson:lessons(*)")
-        .order("position"),
-      supabase
-        .from("member_skills")
-        .select("*")
-        .eq("member_id", user.id)
-        .order("updated_at", { ascending: false }),
-      supabase.from("organisations").select("*"),
-    ]);
+  const [
+    lessonsRes,
+    compsRes,
+    curriculaRes,
+    curLessonsRes,
+    skillsRes,
+    orgsRes,
+    memberTagsRes,
+  ] = await Promise.all([
+    supabase
+      .from("lessons")
+      .select("*, host:organisations(*)")
+      .eq("status", "published")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("lesson_completions")
+      .select("lesson_id")
+      .eq("member_id", user.id),
+    supabase
+      .from("curricula")
+      .select("id, slug, title, blurb, tags, co_author_org_ids")
+      .order("created_at"),
+    supabase
+      .from("curriculum_lessons")
+      .select("curriculum_id, position, lesson:lessons(*)")
+      .order("position"),
+    supabase
+      .from("member_skills")
+      .select("*")
+      .eq("member_id", user.id)
+      .order("updated_at", { ascending: false }),
+    supabase.from("organisations").select("*"),
+    supabase
+      .from("member_tags")
+      .select("tag:interest_tags(slug)")
+      .eq("member_id", user.id),
+  ]);
 
-  const lessons = ((lessonsRes.data as LessonWithHost[] | null) ?? []).map(
+  // Welcome lesson is always first. After that, prioritise lessons whose tags
+  // overlap with the member's interests. Everything else follows.
+  const memberTagSlugs = new Set(
+    ((memberTagsRes.data as { tag: { slug: string } | null }[] | null) ?? [])
+      .map((r) => r.tag?.slug)
+      .filter((s): s is string => !!s),
+  );
+
+  const lessonsRaw = ((lessonsRes.data as LessonWithHost[] | null) ?? []).map(
     (l) => ({
       id: l.id,
       slug: l.slug,
@@ -74,6 +93,23 @@ export default async function LearnPage() {
       host: l.host,
     } as LessonRow),
   );
+
+  // Three-tier sort: welcome-to-fign first, then lessons matching member
+  // interests, then everything else. Within each tier we keep the original
+  // newest-first order.
+  const WELCOME_SLUG = "welcome-to-fign";
+  const rank = (l: LessonRow) => {
+    if (l.slug === WELCOME_SLUG) return 0;
+    if (memberTagSlugs.size && l.tags.some((t) => memberTagSlugs.has(t))) return 1;
+    return 2;
+  };
+  const lessons = lessonsRaw
+    .map((l, i) => ({ l, i }))
+    .sort((a, b) => {
+      const r = rank(a.l) - rank(b.l);
+      return r !== 0 ? r : a.i - b.i;
+    })
+    .map(({ l }) => l);
   const completedIds = new Set(
     ((compsRes.data as { lesson_id: string }[] | null) ?? []).map(
       (r) => r.lesson_id,
@@ -131,6 +167,24 @@ export default async function LearnPage() {
     };
   });
 
+  // Mirrors the lesson sort: onboarding path first (unless already finished),
+  // then paths whose tags overlap member interests, then everything else.
+  const ONBOARDING_PATH_SLUG = "onboarding-new-fign-member";
+  const pathRank = (c: CurriculumRow) => {
+    const allDone = c.lessons.length > 0 && c.lessons.every((l) => l.done);
+    if (c.slug === ONBOARDING_PATH_SLUG && !allDone) return 0;
+    if (memberTagSlugs.size && c.tags.some((t) => memberTagSlugs.has(t)))
+      return 1;
+    return 2;
+  };
+  const sortedCurricula = curricula
+    .map((c, i) => ({ c, i }))
+    .sort((a, b) => {
+      const r = pathRank(a.c) - pathRank(b.c);
+      return r !== 0 ? r : a.i - b.i;
+    })
+    .map(({ c }) => c);
+
   const skills = (skillsRes.data as MemberSkill[] | null) ?? [];
 
   return (
@@ -181,6 +235,7 @@ export default async function LearnPage() {
         ))}
       </div>
 
+      <CurriculaGrid curricula={sortedCurricula} />
       <LibraryBrowse
         lessons={lessons}
         hosts={hosts}
@@ -189,7 +244,6 @@ export default async function LearnPage() {
         completedIds={completedIds}
         totalHosts={hosts.length}
       />
-      <CurriculaGrid curricula={curricula} />
       <SkillsGraphFull skills={skills} />
     </div>
   );

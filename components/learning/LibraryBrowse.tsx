@@ -54,9 +54,9 @@ export function LibraryBrowse({
   return (
     <section className="mt-10">
       <SectionHead
-        num="02"
+        num="03"
         kicker="Browse · the full library"
-        sub={`${lessons.length} lessons · ${totalHosts} sources · filter by interest, host, or format.`}
+        sub={`${lessons.length} lessons · ${totalHosts} sources · filter by interest, host, or format. Or pick a path above.`}
       >
         Learn something <em style={{ color: C.coral }}>intentional</em>
       </SectionHead>

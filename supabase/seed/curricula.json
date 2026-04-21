@@ -30,5 +30,69 @@
     "blurb": "Unity or Godot — pick one, ship something in a weekend.",
     "tags": ["game-dev", "unity", "godot"],
     "lesson_slugs": ["unity-your-first-scene", "godot-2d-platformer", "narrative-design-beat-shape"]
+  },
+  {
+    "slug": "onboarding-new-fign-member",
+    "title": "Your first week on FIGN",
+    "co_author_slugs": ["fign"],
+    "blurb": "Five short lessons to get oriented: the federation rule, the map, welcoming, mentorship, belonging.",
+    "tags": ["community"],
+    "lesson_slugs": ["welcome-to-fign", "your-map-how-interests-work", "welcoming-newcomers-10-min", "finding-a-mentor-writing-a-note"]
+  },
+  {
+    "slug": "safer-online-for-women-in-games",
+    "title": "Safer online · a women's safety set",
+    "co_author_slugs": ["fign"],
+    "blurb": "Four lessons on staying whole while playing, streaming, and modding in public.",
+    "tags": ["safety", "streaming", "advocacy"],
+    "lesson_slugs": ["digital-safety-essentials", "safer-streaming-privacy-basics", "moderation-for-stream-chats", "harassment-escalation-path"]
+  },
+  {
+    "slug": "break-into-gaming-without-code",
+    "title": "Break into gaming without writing code",
+    "co_author_slugs": ["fign"],
+    "blurb": "Six-part walkthrough from Sophia's book. No engineering required — just visibility, proof, and one month of work.",
+    "tags": ["advocacy", "community"],
+    "lesson_slugs": ["breaking-in-without-code", "non-dev-roles-that-exist", "finding-your-entry-point", "credibility-without-a-title", "first-opportunity-outreach", "30-day-gaming-tech-plan", "imposter-syndrome-first-lobby"]
+  },
+  {
+    "slug": "esports-economics-player-to-sponsor",
+    "title": "Esports economics · player to sponsor",
+    "co_author_slugs": ["garden-city-esports", "fign"],
+    "blurb": "How money moves from a player's first match to a brand's signature. Four lessons on the chain.",
+    "tags": ["event-organising", "advocacy"],
+    "lesson_slugs": ["esports-value-chain-4-stages", "reading-the-pitch-deck-a-brand-sees", "esports-contracts-what-to-read-first", "grants-for-women-creators-africa"]
+  },
+  {
+    "slug": "run-a-digital-safety-event",
+    "title": "Run a Digital Safety esports event",
+    "co_author_slugs": ["alliance-francaise-ph", "fign", "nexal"],
+    "blurb": "Run the kind of event that protects girls online while they compete. Hosting craft + event playbook + mod rules.",
+    "tags": ["safety", "event-organising"],
+    "lesson_slugs": ["hosting-a-play-night", "digital-safety-esports-event-playbook", "moderation-for-stream-chats"]
+  },
+  {
+    "slug": "understand-how-games-are-built",
+    "title": "Understand how games are built",
+    "co_author_slugs": ["garden-city-esports", "igda-foundation", "fign", "open-source"],
+    "blurb": "The five layers behind every game, then your first scene in Unity, your first platformer in Godot, and the shape of a narrative beat.",
+    "tags": ["game-dev", "unity", "godot"],
+    "lesson_slugs": ["5-layers-of-every-game", "unity-your-first-scene", "godot-2d-platformer", "narrative-design-beat-shape", "game-art-portfolio-starter"]
+  },
+  {
+    "slug": "cosplay-starter-kit",
+    "title": "Cosplay · from thread to foam",
+    "co_author_slugs": ["bambina"],
+    "blurb": "Two lessons from Bambina: the three stitches that build a wardrobe, and foam armour basics for a pauldron-forearm-greave starter set.",
+    "tags": ["cosplay", "character-design"],
+    "lesson_slugs": ["cosplay-basic-stitches", "cosplay-foam-armour"]
+  },
+  {
+    "slug": "go-live-your-first-stream",
+    "title": "Go live · your first stream, safely",
+    "co_author_slugs": ["open-source", "ingage-gg", "fign"],
+    "blurb": "OBS setup, shoutcasting fundamentals, chat moderation, and streamer privacy — everything before your first Go Live button.",
+    "tags": ["streaming", "shoutcasting", "safety"],
+    "lesson_slugs": ["obs-for-new-streamers", "shoutcasting-101", "safer-streaming-privacy-basics", "moderation-for-stream-chats"]
   }
 ]
