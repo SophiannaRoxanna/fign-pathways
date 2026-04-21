@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Keeps the Supabase auth cookies fresh across SSR requests and redirects
 // unauthenticated users away from protected surfaces.
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const response = NextResponse.next({ request: req });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
