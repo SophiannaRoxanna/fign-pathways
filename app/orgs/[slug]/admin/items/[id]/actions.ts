@@ -1,10 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { requireOrgAdmin } from "@/lib/auth/requireOrgAdmin";
 
-const ItemSchema = z.object({
+const ItemUpdateSchema = z.object({
+  id: z.string().uuid(),
+  slug: z.string().min(1),
   host_org_id: z.string().uuid(),
   co_host_org_ids: z.array(z.string().uuid()).default([]),
   endorsed_org_ids: z.array(z.string().uuid()).default([]),
@@ -62,8 +66,10 @@ function csv(v: FormDataEntryValue | null): string[] {
     .filter(Boolean);
 }
 
-function parseItem(formData: FormData) {
+export async function updateItemAction(formData: FormData) {
   const raw = {
+    id: String(formData.get("id") ?? ""),
+    slug: String(formData.get("slug") ?? ""),
     host_org_id: String(formData.get("host_org_id") ?? ""),
     co_host_org_ids: csv(formData.get("co_host_org_ids")),
     endorsed_org_ids: csv(formData.get("endorsed_org_ids")),
@@ -87,19 +93,16 @@ function parseItem(formData: FormData) {
     external_ref:
       String(formData.get("external_ref") ?? "").trim() || null,
   };
-  return ItemSchema.parse(raw);
-}
+  const parsed = ItemUpdateSchema.parse(raw);
+  const { org, isUmbrella } = await requireOrgAdmin(parsed.slug);
+  if (parsed.host_org_id !== org.id && !isUmbrella) {
+    throw new Error("host_org_id does not match admin scope");
+  }
 
-export async function createItemAction(formData: FormData) {
-  const parsed = parseItem(formData);
   const supabase = await getSupabaseServer();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("items")
-    .insert({
+    .update({
       host_org_id: parsed.host_org_id,
       co_host_org_ids: parsed.co_host_org_ids,
       endorsed_org_ids: parsed.endorsed_org_ids,
@@ -110,7 +113,9 @@ export async function createItemAction(formData: FormData) {
       country: parsed.country || null,
       city: parsed.city,
       language: parsed.language,
-      when_start: parsed.when_start ? new Date(parsed.when_start).toISOString() : null,
+      when_start: parsed.when_start
+        ? new Date(parsed.when_start).toISOString()
+        : null,
       when_end: parsed.when_end ? new Date(parsed.when_end).toISOString() : null,
       rolling: parsed.rolling,
       tags: parsed.tags,
@@ -119,10 +124,42 @@ export async function createItemAction(formData: FormData) {
       registration_preference: parsed.registration_preference,
       visibility: parsed.visibility,
       external_ref: parsed.external_ref,
-      posted_by: user?.id ?? null,
     })
-    .select("id")
-    .single();
-  if (error) throw new Error(`item insert failed: ${error.message}`);
-  redirect(`/admin/items/${data.id}`);
+    .eq("id", parsed.id);
+  if (error) throw new Error(`item update failed: ${error.message}`);
+
+  revalidatePath(`/orgs/${parsed.slug}/admin/items/${parsed.id}`);
+  revalidatePath(`/orgs/${parsed.slug}/admin/items`);
+  revalidatePath(`/orgs/${parsed.slug}`);
+}
+
+const DeleteSchema = z.object({
+  id: z.string().uuid(),
+  slug: z.string().min(1),
+});
+
+export async function deleteItemAction(formData: FormData) {
+  const parsed = DeleteSchema.parse({
+    id: formData.get("id"),
+    slug: formData.get("slug"),
+  });
+  const { org, isUmbrella } = await requireOrgAdmin(parsed.slug);
+
+  const supabase = await getSupabaseServer();
+  const { data: row } = await supabase
+    .from("items")
+    .select("host_org_id")
+    .eq("id", parsed.id)
+    .maybeSingle();
+  if (!row) return;
+  if ((row as { host_org_id: string }).host_org_id !== org.id && !isUmbrella) {
+    throw new Error("cannot delete an item you don't host");
+  }
+
+  const { error } = await supabase.from("items").delete().eq("id", parsed.id);
+  if (error) throw new Error(`item delete failed: ${error.message}`);
+
+  revalidatePath(`/orgs/${parsed.slug}/admin/items`);
+  revalidatePath(`/orgs/${parsed.slug}`);
+  redirect(`/orgs/${parsed.slug}/admin/items`);
 }

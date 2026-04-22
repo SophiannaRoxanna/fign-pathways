@@ -6,6 +6,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { MilestonesPanel } from "@/components/learning/MilestonesPanel";
 import { ActivityTrail, type ActivityRow } from "@/components/member/ActivityTrail";
 import { PublicSkillsToggle } from "./PublicSkillsToggle";
+import { toggleRosterVisibilityAction } from "./roster-actions";
 import type { Member, Milestone, Organisation } from "@/lib/supabase/types";
 
 const dateFmt = new Intl.DateTimeFormat("en", {
@@ -118,6 +119,45 @@ export default async function MePage() {
     is_public: boolean;
   }[];
   const anyPublic = skills.some((s) => s.is_public);
+
+  // Orgs the member could appear on: primary + any org whose item they attended.
+  const rosterableOrgIds = new Set<string>();
+  if (me.primary_org_id) rosterableOrgIds.add(me.primary_org_id);
+  const { data: attendedHosts } = await supabase
+    .from("item_registrations")
+    .select("items!inner(host_org_id)")
+    .eq("member_id", user.id)
+    .eq("attended", true);
+  for (const row of (attendedHosts ?? []) as unknown as {
+    items: { host_org_id: string } | { host_org_id: string }[] | null;
+  }[]) {
+    const it = Array.isArray(row.items) ? row.items[0] : row.items;
+    if (it?.host_org_id) rosterableOrgIds.add(it.host_org_id);
+  }
+
+  const rosterableOrgs: Organisation[] = [];
+  const visByOrg = new Map<string, boolean>();
+  if (rosterableOrgIds.size > 0) {
+    const ids = Array.from(rosterableOrgIds);
+    const { data: orgsData } = await supabase
+      .from("organisations")
+      .select("*")
+      .in("id", ids)
+      .eq("public_page_enabled", true);
+    rosterableOrgs.push(...((orgsData ?? []) as Organisation[]));
+
+    const { data: visData } = await supabase
+      .from("org_roster_visibility")
+      .select("org_id, visible_in_public_roster")
+      .eq("member_id", user.id)
+      .in("org_id", ids);
+    for (const r of (visData ?? []) as {
+      org_id: string;
+      visible_in_public_roster: boolean;
+    }[]) {
+      visByOrg.set(r.org_id, r.visible_in_public_roster);
+    }
+  }
 
   return (
     <div className="px-6 md:px-10 py-10 md:py-14 max-w-4xl mx-auto">
@@ -246,6 +286,60 @@ export default async function MePage() {
           </ul>
         )}
       </section>
+
+      {rosterableOrgs.length > 0 && (
+        <section className="mt-14">
+          <SectionHead
+            num="05"
+            kicker="Show me on these org pages"
+            sub="Private by default. Flip a toggle to appear on an org's public member list. Reversible anytime."
+          >
+            Where you <em>show up</em>.
+          </SectionHead>
+          <ul className="mt-4 space-y-2">
+            {rosterableOrgs.map((o) => {
+              const visible = visByOrg.get(o.id) === true;
+              return (
+                <li
+                  key={o.id}
+                  className="flex items-center justify-between gap-4 py-2"
+                  style={{ borderBottom: `1px solid ${C.hairline}` }}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <OrgChip org={o} />
+                    <span
+                      className="font-display text-[16px] truncate"
+                      style={{ color: C.ink }}
+                    >
+                      {o.name}
+                    </span>
+                  </div>
+                  <form action={toggleRosterVisibilityAction}>
+                    <input type="hidden" name="org_id" value={o.id} />
+                    <input type="hidden" name="org_slug" value={o.slug} />
+                    <input
+                      type="hidden"
+                      name="next"
+                      value={visible ? "0" : "1"}
+                    />
+                    <button
+                      type="submit"
+                      className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold px-3 py-1"
+                      style={{
+                        background: visible ? C.green : "transparent",
+                        color: visible ? C.paper : C.ink,
+                        border: `1.5px solid ${visible ? C.green : C.ink}`,
+                      }}
+                    >
+                      {visible ? "✓ showing" : "show me"}
+                    </button>
+                  </form>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

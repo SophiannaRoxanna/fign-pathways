@@ -52,6 +52,7 @@ const ItemUpdateSchema = z.object({
   visibility: z
     .enum(["fign_network", "host_members_only", "public"])
     .default("fign_network"),
+  external_ref: z.string().optional().nullable(),
 });
 
 function csv(v: FormDataEntryValue | null): string[] {
@@ -85,6 +86,8 @@ export async function updateItemAction(formData: FormData) {
       formData.get("registration_preference") ?? "either",
     ),
     visibility: String(formData.get("visibility") ?? "fign_network"),
+    external_ref:
+      String(formData.get("external_ref") ?? "").trim() || null,
   };
   const parsed = ItemUpdateSchema.parse(raw);
 
@@ -112,6 +115,7 @@ export async function updateItemAction(formData: FormData) {
       registration_url: parsed.registration_url || null,
       registration_preference: parsed.registration_preference,
       visibility: parsed.visibility,
+      external_ref: parsed.external_ref,
     })
     .eq("id", parsed.id);
   if (error) throw new Error(`item update failed: ${error.message}`);

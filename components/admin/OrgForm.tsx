@@ -18,6 +18,7 @@ export function OrgForm({
   secondaryLabel,
   submitLabel = "Save organisation",
   hiddenFields,
+  lockIdentity = false,
 }: {
   initial?: OrgFormInitial;
   action: Action;
@@ -25,6 +26,7 @@ export function OrgForm({
   secondaryLabel?: string;
   submitLabel?: string;
   hiddenFields?: Record<string, string>;
+  lockIdentity?: boolean;
 }) {
   const [name, setName] = useState(initial?.name ?? "");
   const [shortName, setShortName] = useState(initial?.short_name ?? "");
@@ -48,38 +50,69 @@ export function OrgForm({
           ))
         : null}
       <div className="space-y-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Field label="slug" hint="lowercase-hyphen · unique">
-            <input
-              name="slug"
-              required
-              defaultValue={initial?.slug ?? ""}
-              placeholder="femmes-aux-consoles"
-              pattern="[a-z0-9\-]+"
-              style={inputStyle}
-            />
-          </Field>
-          <Field label="type">
-            <select
-              name="type"
-              value={type}
-              onChange={(e) => {
-                const t = e.target.value;
-                setType(t);
-                if (!initial?.brand_color) {
-                  setBrandColor(ORG_TYPE_COLOR[t] ?? C.purple);
-                }
-              }}
-              style={inputStyle}
-            >
-              <option value="umbrella">umbrella</option>
-              <option value="member_org">member_org</option>
-              <option value="partner">partner</option>
-              <option value="chapter">chapter</option>
-              <option value="open">open</option>
-            </select>
-          </Field>
-        </div>
+        {lockIdentity ? (
+          <>
+            <input type="hidden" name="slug" value={initial?.slug ?? ""} />
+            <input type="hidden" name="type" value={type} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <Field label="slug" hint="contact umbrella to rename">
+                <div
+                  style={{
+                    ...inputStyle,
+                    color: C.inkSoft,
+                    background: C.paperAlt,
+                  }}
+                >
+                  {initial?.slug ?? "—"}
+                </div>
+              </Field>
+              <Field label="type" hint="contact umbrella to change">
+                <div
+                  style={{
+                    ...inputStyle,
+                    color: C.inkSoft,
+                    background: C.paperAlt,
+                  }}
+                >
+                  {type}
+                </div>
+              </Field>
+            </div>
+          </>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <Field label="slug" hint="lowercase-hyphen · unique">
+              <input
+                name="slug"
+                required
+                defaultValue={initial?.slug ?? ""}
+                placeholder="femmes-aux-consoles"
+                pattern="[a-z0-9\-]+"
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="type">
+              <select
+                name="type"
+                value={type}
+                onChange={(e) => {
+                  const t = e.target.value;
+                  setType(t);
+                  if (!initial?.brand_color) {
+                    setBrandColor(ORG_TYPE_COLOR[t] ?? C.purple);
+                  }
+                }}
+                style={inputStyle}
+              >
+                <option value="umbrella">umbrella</option>
+                <option value="member_org">member_org</option>
+                <option value="partner">partner</option>
+                <option value="chapter">chapter</option>
+                <option value="open">open</option>
+              </select>
+            </Field>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Field label="name">

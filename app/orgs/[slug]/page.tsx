@@ -81,6 +81,33 @@ export default async function OrgPublicPage({
     .limit(48);
   const items = (itemsData as Item[] | null) ?? [];
 
+  // Public roster: members who have opted into visibility for this org.
+  const { data: rosterVis } = await supabase
+    .from("org_roster_visibility")
+    .select("member_id")
+    .eq("org_id", org.id)
+    .eq("visible_in_public_roster", true)
+    .limit(48);
+  const rosterMemberIds = ((rosterVis ?? []) as { member_id: string }[]).map(
+    (r) => r.member_id,
+  );
+  type RosterMember = {
+    id: string;
+    handle: string | null;
+    name: string | null;
+    country: string | null;
+    city: string | null;
+  };
+  let rosterMembers: RosterMember[] = [];
+  if (rosterMemberIds.length > 0) {
+    const { data: pm } = await supabase
+      .from("public_members")
+      .select("id, handle, name, country, city")
+      .in("id", rosterMemberIds)
+      .order("name");
+    rosterMembers = ((pm ?? []) as RosterMember[]) ?? [];
+  }
+
   let isFollowing = false;
   let isAdmin = false;
   if (user) {
@@ -259,6 +286,40 @@ export default async function OrgPublicPage({
               </article>
             ))}
           </div>
+        )}
+
+        {rosterMembers.length > 0 && (
+          <section className="mt-14">
+            <SectionHead
+              num="02"
+              kicker="Members"
+              sub="Women who chose to be visible on this page. Opt-in, reversible."
+            >
+              Who <em>shows up</em> for {org.short_name || org.name}
+            </SectionHead>
+            <ul className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {rosterMembers.map((m) => (
+                <li
+                  key={m.id}
+                  className="p-3"
+                  style={{ background: C.paperAlt, border: `1.5px solid ${C.hairline}` }}
+                >
+                  <div
+                    className="font-display text-[16px] leading-tight truncate"
+                    style={{ color: C.ink }}
+                  >
+                    {m.name ?? m.handle ?? "—"}
+                  </div>
+                  <div
+                    className="mt-1 font-mono text-[10px] tracking-[0.18em] uppercase"
+                    style={{ color: C.inkMute }}
+                  >
+                    {[m.city, m.country].filter(Boolean).join(" · ") || "—"}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
       </main>
     </div>

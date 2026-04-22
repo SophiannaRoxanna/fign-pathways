@@ -40,6 +40,7 @@ export function ItemForm({
   action,
   hiddenFields,
   preselectHostOrgId,
+  hostLocked = false,
   submitLabel = "Save item",
 }: {
   initial?: ItemFormInitial;
@@ -48,11 +49,13 @@ export function ItemForm({
   action: Action;
   hiddenFields?: Record<string, string>;
   preselectHostOrgId?: string;
+  hostLocked?: boolean;
   submitLabel?: string;
 }) {
   const [hostOrgId, setHostOrgId] = useState<string>(
     initial?.host_org_id ?? preselectHostOrgId ?? orgs[0]?.id ?? "",
   );
+  const lockedHost = hostLocked ? orgs.find((o) => o.id === hostOrgId) : null;
 
   const orgOptions = useMemo(
     () =>
@@ -82,19 +85,35 @@ export function ItemForm({
         <Label>attribution</Label>
         <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-5">
           <Field label="host org" hint="the primary credit for this item">
-            <select
-              name="host_org_id"
-              required
-              value={hostOrgId}
-              onChange={(e) => setHostOrgId(e.target.value)}
-              style={inputStyle}
-            >
-              {orgs.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.name} ({o.type})
-                </option>
-              ))}
-            </select>
+            {lockedHost ? (
+              <>
+                <input type="hidden" name="host_org_id" value={hostOrgId} />
+                <div
+                  style={{
+                    ...inputStyle,
+                    color: C.inkSoft,
+                    background: C.paperAlt,
+                  }}
+                  aria-readonly
+                >
+                  {lockedHost.name} ({lockedHost.type})
+                </div>
+              </>
+            ) : (
+              <select
+                name="host_org_id"
+                required
+                value={hostOrgId}
+                onChange={(e) => setHostOrgId(e.target.value)}
+                style={inputStyle}
+              >
+                {orgs.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.name} ({o.type})
+                  </option>
+                ))}
+              </select>
+            )}
           </Field>
           <Field label="kind">
             <select
@@ -280,7 +299,7 @@ export function ItemForm({
             </select>
           </Field>
         </div>
-        <div className="mt-5">
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
           <Field label="visibility">
             <select
               name="visibility"
@@ -291,6 +310,17 @@ export function ItemForm({
               <option value="host_members_only">host_members_only</option>
               <option value="public">public</option>
             </select>
+          </Field>
+          <Field
+            label="external ref"
+            hint="optional · used by your webhook to map attendees to this item"
+          >
+            <input
+              name="external_ref"
+              defaultValue={initial?.external_ref ?? ""}
+              placeholder="daimyo-mk1-gcgc-2026"
+              style={inputStyle}
+            />
           </Field>
         </div>
       </section>

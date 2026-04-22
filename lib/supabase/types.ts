@@ -84,6 +84,7 @@ export type Item = {
   visibility: "fign_network" | "host_members_only" | "public";
   posted_by: string | null;
   posted_at: string;
+  external_ref: string | null;
 };
 
 export type Activity = {

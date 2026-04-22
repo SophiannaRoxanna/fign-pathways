@@ -3,8 +3,10 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { requireOrgAdmin } from "@/lib/auth/requireOrgAdmin";
 
 const ItemSchema = z.object({
+  slug: z.string().min(1),
   host_org_id: z.string().uuid(),
   co_host_org_ids: z.array(z.string().uuid()).default([]),
   endorsed_org_ids: z.array(z.string().uuid()).default([]),
@@ -62,8 +64,9 @@ function csv(v: FormDataEntryValue | null): string[] {
     .filter(Boolean);
 }
 
-function parseItem(formData: FormData) {
+export async function createItemAction(formData: FormData) {
   const raw = {
+    slug: String(formData.get("slug") ?? ""),
     host_org_id: String(formData.get("host_org_id") ?? ""),
     co_host_org_ids: csv(formData.get("co_host_org_ids")),
     endorsed_org_ids: csv(formData.get("endorsed_org_ids")),
@@ -87,16 +90,14 @@ function parseItem(formData: FormData) {
     external_ref:
       String(formData.get("external_ref") ?? "").trim() || null,
   };
-  return ItemSchema.parse(raw);
-}
+  const parsed = ItemSchema.parse(raw);
 
-export async function createItemAction(formData: FormData) {
-  const parsed = parseItem(formData);
+  const { org, user } = await requireOrgAdmin(parsed.slug);
+  if (parsed.host_org_id !== org.id) {
+    throw new Error("host_org_id does not match admin scope");
+  }
+
   const supabase = await getSupabaseServer();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const { data, error } = await supabase
     .from("items")
     .insert({
@@ -110,7 +111,9 @@ export async function createItemAction(formData: FormData) {
       country: parsed.country || null,
       city: parsed.city,
       language: parsed.language,
-      when_start: parsed.when_start ? new Date(parsed.when_start).toISOString() : null,
+      when_start: parsed.when_start
+        ? new Date(parsed.when_start).toISOString()
+        : null,
       when_end: parsed.when_end ? new Date(parsed.when_end).toISOString() : null,
       rolling: parsed.rolling,
       tags: parsed.tags,
@@ -119,10 +122,10 @@ export async function createItemAction(formData: FormData) {
       registration_preference: parsed.registration_preference,
       visibility: parsed.visibility,
       external_ref: parsed.external_ref,
-      posted_by: user?.id ?? null,
+      posted_by: user.id,
     })
     .select("id")
     .single();
   if (error) throw new Error(`item insert failed: ${error.message}`);
-  redirect(`/admin/items/${data.id}`);
+  redirect(`/orgs/${parsed.slug}/admin/items/${data.id}`);
 }

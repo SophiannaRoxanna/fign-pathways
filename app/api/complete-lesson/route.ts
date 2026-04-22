@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
   });
 
   if (error) {
-    console.error("[complete-lesson] rpc failed", { lesson_id: parsed.data.lesson_id, error });
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

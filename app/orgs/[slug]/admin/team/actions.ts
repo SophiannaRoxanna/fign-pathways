@@ -1,0 +1,153 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { requireOrgAdmin } from "@/lib/auth/requireOrgAdmin";
+
+const InviteSchema = z.object({
+  slug: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(["coordinator", "poster"]).default("coordinator"),
+});
+
+export async function inviteTeamAdminAction(formData: FormData) {
+  const parsed = InviteSchema.parse({
+    slug: String(formData.get("slug") ?? ""),
+    email: String(formData.get("email") ?? "").trim().toLowerCase(),
+    role: String(formData.get("role") ?? "coordinator"),
+  });
+
+  const { org, role: myRole, isUmbrella } = await requireOrgAdmin(parsed.slug);
+  if (!isUmbrella && myRole !== "owner" && myRole !== "coordinator") {
+    throw new Error("only owners and coordinators can invite team members");
+  }
+
+  const admin = getSupabaseAdmin();
+
+  const { data: existingMember } = await admin
+    .from("members")
+    .select("id")
+    .eq("email", parsed.email)
+    .maybeSingle();
+
+  let memberId = existingMember?.id as string | undefined;
+  if (!memberId) {
+    const { data: invite, error: invErr } =
+      await admin.auth.admin.inviteUserByEmail(parsed.email);
+    if (invErr || !invite?.user) {
+      throw new Error(`invite failed: ${invErr?.message ?? "no user returned"}`);
+    }
+    memberId = invite.user.id;
+    const { error: insErr } = await admin
+      .from("members")
+      .upsert({ id: memberId, email: parsed.email }, { onConflict: "id" });
+    if (insErr) throw new Error(`could not seed member row: ${insErr.message}`);
+  }
+
+  // First admin of this org defaults to owner (matches super-admin behaviour).
+  const { count } = await admin
+    .from("org_admins")
+    .select("*", { count: "exact", head: true })
+    .eq("org_id", org.id);
+  const effectiveRole = (count ?? 0) === 0 ? "owner" : parsed.role;
+
+  const { error: linkErr } = await admin
+    .from("org_admins")
+    .upsert(
+      { org_id: org.id, member_id: memberId, role: effectiveRole },
+      { onConflict: "org_id,member_id" },
+    );
+  if (linkErr) throw new Error(`team link failed: ${linkErr.message}`);
+
+  revalidatePath(`/orgs/${parsed.slug}/admin/team`);
+}
+
+const ChangeRoleSchema = z.object({
+  slug: z.string().min(1),
+  member_id: z.string().uuid(),
+  role: z.enum(["owner", "coordinator", "poster"]),
+});
+
+export async function changeTeamRoleAction(formData: FormData) {
+  const parsed = ChangeRoleSchema.parse({
+    slug: String(formData.get("slug") ?? ""),
+    member_id: String(formData.get("member_id") ?? ""),
+    role: String(formData.get("role") ?? ""),
+  });
+
+  const { org, role: myRole, isUmbrella } = await requireOrgAdmin(parsed.slug);
+  if (!isUmbrella && myRole !== "owner" && myRole !== "coordinator") {
+    throw new Error("not permitted");
+  }
+  if (parsed.role === "owner" && !isUmbrella) {
+    throw new Error("only umbrella can assign owner");
+  }
+
+  const admin = getSupabaseAdmin();
+  // Prevent demoting the last owner.
+  if (!isUmbrella) {
+    const { data: target } = await admin
+      .from("org_admins")
+      .select("role")
+      .eq("org_id", org.id)
+      .eq("member_id", parsed.member_id)
+      .maybeSingle();
+    if ((target as { role: string } | null)?.role === "owner") {
+      throw new Error("only umbrella can modify the owner role");
+    }
+  }
+
+  const { error } = await admin
+    .from("org_admins")
+    .update({ role: parsed.role })
+    .eq("org_id", org.id)
+    .eq("member_id", parsed.member_id);
+  if (error) throw new Error(`role update failed: ${error.message}`);
+
+  revalidatePath(`/orgs/${parsed.slug}/admin/team`);
+}
+
+const RemoveSchema = z.object({
+  slug: z.string().min(1),
+  member_id: z.string().uuid(),
+});
+
+export async function removeTeamAdminAction(formData: FormData) {
+  const parsed = RemoveSchema.parse({
+    slug: String(formData.get("slug") ?? ""),
+    member_id: String(formData.get("member_id") ?? ""),
+  });
+
+  const { org, role: myRole, isUmbrella, user } = await requireOrgAdmin(
+    parsed.slug,
+  );
+  if (!isUmbrella && myRole !== "owner" && myRole !== "coordinator") {
+    throw new Error("not permitted");
+  }
+  if (parsed.member_id === user.id) {
+    throw new Error("cannot remove yourself; contact umbrella");
+  }
+
+  const admin = getSupabaseAdmin();
+  if (!isUmbrella) {
+    const { data: target } = await admin
+      .from("org_admins")
+      .select("role")
+      .eq("org_id", org.id)
+      .eq("member_id", parsed.member_id)
+      .maybeSingle();
+    if ((target as { role: string } | null)?.role === "owner") {
+      throw new Error("only umbrella can remove an owner");
+    }
+  }
+
+  const { error } = await admin
+    .from("org_admins")
+    .delete()
+    .eq("org_id", org.id)
+    .eq("member_id", parsed.member_id);
+  if (error) throw new Error(`remove failed: ${error.message}`);
+
+  revalidatePath(`/orgs/${parsed.slug}/admin/team`);
+}
