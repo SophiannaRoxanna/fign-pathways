@@ -2,7 +2,6 @@ import Link from "next/link";
 import { C } from "@/lib/design/tokens";
 import { Label } from "@/components/ui/Label";
 import { SectionHead } from "@/components/ui/SectionHead";
-import { OrgChip } from "@/components/org/OrgChip";
 import type { Organisation } from "@/lib/supabase/types";
 
 type CurriculumLesson = {

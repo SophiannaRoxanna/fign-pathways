@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { C } from "@/lib/design/tokens";
@@ -9,7 +9,17 @@ import { Logo } from "@/components/ui/Logo";
 
 type OAuthProvider = "google" | "linkedin_oidc";
 
+// `useSearchParams` requires a Suspense boundary to prerender. Top-level export
+// is the boundary; the actual UI lives in <SignInCard /> below.
 export default function SignInPage() {
+  return (
+    <Suspense fallback={<SignInShell />}>
+      <SignInCard />
+    </Suspense>
+  );
+}
+
+function SignInCard() {
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "/map";
 
@@ -172,6 +182,39 @@ export default function SignInPage() {
         >
           WhatsApp sign-in coming later in 2026 — email for now works
           everywhere.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// Skeleton shown while Suspense awaits search params during prerender.
+// Renders the same outer chrome so there's no layout shift on hydration.
+function SignInShell() {
+  return (
+    <div
+      className="min-h-screen flex items-center justify-center px-6"
+      style={{ background: C.canvasDark, color: C.inkOnDark }}
+    >
+      <div
+        className="w-full max-w-md p-8"
+        style={{ background: C.surfaceDark, border: `2px solid ${C.hairlineDark}` }}
+      >
+        <div className="flex items-center gap-3">
+          <Logo height={28} priority />
+          <Label color={C.coral}>sign in</Label>
+        </div>
+        <h1
+          className="mt-3 font-display text-4xl italic leading-tight"
+          style={{ color: C.inkOnDark }}
+        >
+          Open your <em style={{ color: C.coral }}>door</em>.
+        </h1>
+        <p
+          className="mt-4 text-sm"
+          style={{ color: C.inkOnDarkMute, opacity: 0.7 }}
+        >
+          Loading…
         </p>
       </div>
     </div>
