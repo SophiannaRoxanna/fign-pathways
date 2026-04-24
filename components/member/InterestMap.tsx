@@ -20,10 +20,19 @@ export function InterestMap({
   const cx = W / 2;
   const cy = H / 2;
 
+  // Round to integer pixels: Math.cos / Math.sin are NOT bit-identical across
+  // V8 implementations (Node SSR vs Chrome hydration), and IEEE 754 doesn't
+  // require transcendental functions to be deterministic. Without rounding,
+  // the SVG coordinate strings differ in their final digits between server
+  // and client, triggering a hydration warning. Math.round IS deterministic.
   const placeRing = (arr: string[], r: number, startAngle: number) =>
     arr.map((t, i) => {
       const a = startAngle + (i / Math.max(arr.length, 1)) * Math.PI * 2;
-      return { tag: t, x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r };
+      return {
+        tag: t,
+        x: Math.round(cx + Math.cos(a) * r),
+        y: Math.round(cy + Math.sin(a) * r),
+      };
     });
 
   const decNodes = placeRing(declared, 120, -Math.PI / 2);
