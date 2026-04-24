@@ -121,7 +121,7 @@ function OrgChip({ orgKey }) {
   if (!org) return null;
   return (
     <span
-      className="inline-block font-mono text-[10px] tracking-[0.12em] uppercase font-bold px-2 py-[2px]"
+      className="inline-block font-mono text-[10px] tracking-[0.12em] uppercase font-bold px-2 py-0.5"
       style={{ color: C.paper, background: org.color }}
     >
       {org.brand}
@@ -459,7 +459,7 @@ export default function FIGNLearn() {
         </div>
       </header>
 
-      <main className="px-6 md:px-10 py-10 max-w-[1280px] mx-auto">
+      <main className="px-6 md:px-10 py-10 max-w-7xl mx-auto">
         {/* Hero */}
         <Label>§ 01 · Skills Lab</Label>
         <h1 className="mt-3 text-5xl md:text-7xl leading-[0.95]" style={{ color: C.ink, fontFamily: "'Cormorant Garamond', Georgia, serif" }}>

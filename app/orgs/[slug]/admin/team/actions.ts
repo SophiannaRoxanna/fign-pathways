@@ -1,9 +1,22 @@
 "use server";
 
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { requireOrgAdmin } from "@/lib/auth/requireOrgAdmin";
+
+// Resolve the absolute base URL for invite redirects. NEXT_PUBLIC_SITE_URL
+// wins when set; otherwise we rebuild it from the incoming request headers
+// (works for Vercel preview URLs + localhost).
+async function siteOrigin(): Promise<string> {
+  const env = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (env) return env;
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "fign-pathways.vercel.app";
+  return `${proto}://${host}`;
+}
 
 const InviteSchema = z.object({
   slug: z.string().min(1),
@@ -33,8 +46,13 @@ export async function inviteTeamAdminAction(formData: FormData) {
 
   let memberId = existingMember?.id as string | undefined;
   if (!memberId) {
+    const origin = await siteOrigin();
     const { data: invite, error: invErr } =
-      await admin.auth.admin.inviteUserByEmail(parsed.email);
+      await admin.auth.admin.inviteUserByEmail(parsed.email, {
+        redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(
+          `/orgs/${parsed.slug}/admin`,
+        )}`,
+      });
     if (invErr || !invite?.user) {
       throw new Error(`invite failed: ${invErr?.message ?? "no user returned"}`);
     }

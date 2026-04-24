@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -7,6 +8,15 @@ import { requireOrgAdmin } from "@/lib/auth/requireOrgAdmin";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { importRegistrations } from "@/lib/registrations/import";
 import { parseAttendeeCsv } from "@/lib/registrations/csv";
+
+async function siteOrigin(): Promise<string> {
+  const env = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (env) return env;
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "fign-pathways.vercel.app";
+  return `${proto}://${host}`;
+}
 
 const ImportSchema = z.object({
   slug: z.string().min(1),
@@ -132,8 +142,13 @@ export async function resolvePendingAction(formData: FormData) {
 
   let memberId = existingMember?.id as string | undefined;
   if (!memberId) {
+    const origin = await siteOrigin();
     const { data: invite, error: invErr } =
-      await admin.auth.admin.inviteUserByEmail(p.email);
+      await admin.auth.admin.inviteUserByEmail(p.email, {
+        redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(
+          "/onboarding/start",
+        )}`,
+      });
     if (invErr || !invite?.user) {
       throw new Error(`invite failed: ${invErr?.message ?? "no user returned"}`);
     }

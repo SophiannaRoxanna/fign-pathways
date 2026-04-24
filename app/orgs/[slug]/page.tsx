@@ -111,21 +111,27 @@ export default async function OrgPublicPage({
   let isFollowing = false;
   let isAdmin = false;
   if (user) {
-    const { data: follow } = await supabase
-      .from("follows")
-      .select("org_id")
-      .eq("member_id", user.id)
-      .eq("org_id", org.id)
-      .maybeSingle();
+    const [{ data: follow }, { data: admin }, { data: me }] = await Promise.all([
+      supabase
+        .from("follows")
+        .select("org_id")
+        .eq("member_id", user.id)
+        .eq("org_id", org.id)
+        .maybeSingle(),
+      supabase
+        .from("org_admins")
+        .select("role")
+        .eq("member_id", user.id)
+        .eq("org_id", org.id)
+        .maybeSingle(),
+      supabase
+        .from("members")
+        .select("is_umbrella_admin")
+        .eq("id", user.id)
+        .maybeSingle(),
+    ]);
     isFollowing = !!follow;
-
-    const { data: admin } = await supabase
-      .from("org_admins")
-      .select("role")
-      .eq("member_id", user.id)
-      .eq("org_id", org.id)
-      .maybeSingle();
-    isAdmin = !!admin;
+    isAdmin = !!admin || !!(me as { is_umbrella_admin?: boolean } | null)?.is_umbrella_admin;
   }
 
   const bg = org.brand_color || C.ink;

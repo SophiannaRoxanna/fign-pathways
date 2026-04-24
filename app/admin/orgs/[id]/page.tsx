@@ -67,10 +67,32 @@ export default async function EditOrgPage({ params }: PageProps) {
         <em>{o.name}</em>
       </SectionHead>
 
-      <form action={gotoNewItemForOrg} className="mb-8">
-        <input type="hidden" name="org_id" value={o.id} />
-        <PrimaryButton>+ post an item as this org</PrimaryButton>
-      </form>
+      <div className="mb-8 flex flex-wrap items-center gap-3">
+        <form action={gotoNewItemForOrg}>
+          <input type="hidden" name="org_id" value={o.id} />
+          <PrimaryButton>+ post an item as this org</PrimaryButton>
+        </form>
+        <Link
+          href={`/orgs/${o.slug}/admin`}
+          className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold px-3 py-2 inline-block"
+          style={{
+            background: "transparent",
+            color: C.ink,
+            border: `1.5px solid ${C.ink}`,
+          }}
+        >
+          open {o.short_name || o.name} admin desk →
+        </Link>
+        <Link
+          href={`/orgs/${o.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-[10px] tracking-[0.2em] uppercase"
+          style={{ color: C.inkMute }}
+        >
+          public page ↗
+        </Link>
+      </div>
 
       <OrgForm
         initial={o}

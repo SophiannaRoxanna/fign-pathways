@@ -1,12 +1,15 @@
 "use server";
 
 import crypto from "node:crypto";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { requireOrgAdmin } from "@/lib/auth/requireOrgAdmin";
+
+const NEW_SECRET_COOKIE = "fign-new-webhook-secret";
 
 const SettingsSchema = z.object({
   id: z.string().uuid(),
@@ -88,6 +91,11 @@ export async function updateOrgSettingsAction(formData: FormData) {
   revalidatePath(`/orgs/${slugToWrite}/admin/settings`);
   revalidatePath(`/orgs/${slugToWrite}/admin`);
   revalidatePath(`/orgs/${slugToWrite}`);
+  // If the slug changed (umbrella admin only), the URL the browser is on is
+  // now stale. Always redirect to the canonical settings URL so refreshes work.
+  if (slugToWrite !== parsed.current_slug) {
+    redirect(`/orgs/${slugToWrite}/admin/settings`);
+  }
 }
 
 const SlugOnly = z.object({ slug: z.string().min(1) });
@@ -109,9 +117,30 @@ export async function rotateWebhookSecretAction(formData: FormData) {
     .eq("id", org.id);
   if (error) throw new Error(`rotate failed: ${error.message}`);
 
+  // Surface the new secret once via a short-lived httpOnly cookie. Never put
+  // the secret in the URL — that ends up in access logs, browser history, and
+  // referrer headers. The settings page reads (and clears) the cookie on next
+  // render. Cookie scope is the settings path only so it doesn't leak into
+  // other admin pages.
+  const cookieStore = await cookies();
+  cookieStore.set(NEW_SECRET_COOKIE, secret, {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 120,
+    path: `/orgs/${parsed.slug}/admin/settings`,
+  });
+
   revalidatePath(`/orgs/${parsed.slug}/admin/settings`);
-  // Surface the new secret once via the URL — it isn't fetchable later.
-  redirect(
-    `/orgs/${parsed.slug}/admin/settings?new_secret=${encodeURIComponent(secret)}`,
-  );
+  redirect(`/orgs/${parsed.slug}/admin/settings`);
+}
+
+// Server action invoked by the "I copied it" button on the settings page.
+// Deletes the cookie so a refresh no longer shows the secret.
+export async function dismissNewWebhookSecretAction(formData: FormData) {
+  const slug = String(formData.get("slug") ?? "");
+  await requireOrgAdmin(slug); // gate
+  const cookieStore = await cookies();
+  cookieStore.delete({ name: NEW_SECRET_COOKIE, path: `/orgs/${slug}/admin/settings` });
+  revalidatePath(`/orgs/${slug}/admin/settings`);
 }

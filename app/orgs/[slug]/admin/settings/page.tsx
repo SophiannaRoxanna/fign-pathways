@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { C } from "@/lib/design/tokens";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Label } from "@/components/ui/Label";
@@ -7,11 +7,15 @@ import { Rule } from "@/components/ui/Rule";
 import { OrgForm } from "@/components/admin/OrgForm";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { requireOrgAdmin } from "@/lib/auth/requireOrgAdmin";
-import { updateOrgSettingsAction, rotateWebhookSecretAction } from "./actions";
+import {
+  updateOrgSettingsAction,
+  rotateWebhookSecretAction,
+  dismissNewWebhookSecretAction,
+} from "./actions";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ new_secret?: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 };
 
 type WebhookEvent = {
@@ -33,12 +37,15 @@ const datetimeFmt = new Intl.DateTimeFormat("en", {
 
 export default async function OrgAdminSettingsPage({
   params,
-  searchParams,
 }: PageProps) {
   const { slug } = await params;
-  const sp = await searchParams;
   const { org, isUmbrella } = await requireOrgAdmin(slug);
   const supabase = await getSupabaseServer();
+
+  // Read-once new-secret cookie set by rotateWebhookSecretAction. Path-scoped
+  // to /orgs/[slug]/admin/settings so it doesn't leak across the admin.
+  const cookieStore = await cookies();
+  const newSecret = cookieStore.get("fign-new-webhook-secret")?.value;
 
   const { data: orgSecretRow } = await supabase
     .from("organisations")
@@ -115,7 +122,7 @@ export default async function OrgAdminSettingsPage({
           Sync from your own system.
         </SectionHead>
 
-        {sp.new_secret ? (
+        {newSecret ? (
           <div
             className="mb-6 p-5"
             style={{
@@ -129,7 +136,8 @@ export default async function OrgAdminSettingsPage({
               style={{ color: C.ink }}
             >
               Copy this now. We don&rsquo;t show it again — if you lose it,
-              rotate another.
+              rotate another. The value disappears when you click below or in
+              two minutes, whichever is sooner.
             </p>
             <pre
               className="mt-3 px-3 py-2 font-mono text-[12px] overflow-x-auto"
@@ -139,8 +147,18 @@ export default async function OrgAdminSettingsPage({
                 color: C.ink,
               }}
             >
-              {sp.new_secret}
+              {newSecret}
             </pre>
+            <form action={dismissNewWebhookSecretAction} className="mt-3">
+              <input type="hidden" name="slug" value={slug} />
+              <button
+                type="submit"
+                className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold px-3 py-2"
+                style={{ background: C.ink, color: C.paper }}
+              >
+                I copied it · clear
+              </button>
+            </form>
           </div>
         ) : null}
 

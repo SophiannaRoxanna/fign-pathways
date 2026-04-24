@@ -126,6 +126,11 @@ export async function POST(
     }
     itemId = (item as { id: string }).id;
   } else {
+    await admin.from("webhook_events").insert({
+      org_id: org.id,
+      ok: false,
+      error: "missing item_id and external_item_ref",
+    });
     return NextResponse.json(
       { error: "must include either item_id or external_item_ref" },
       { status: 400 },
