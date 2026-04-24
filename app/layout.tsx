@@ -35,11 +35,21 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
+    // suppressHydrationWarning is scoped to <html> and <body> only — both are
+    // common targets for browser-extension attribute injection (Grammarly,
+    // 1Password, Honey, etc. tag the body with `data-…` attrs before React
+    // hydrates). Without this, every page logs a hydration warning on first
+    // load. Page-content mismatches are NOT suppressed; those would still
+    // surface in the console.
     <html
       lang="en"
       className={`${bricolage.variable} ${manrope.variable} ${martian.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body
+        className="min-h-full flex flex-col"
+        suppressHydrationWarning
+      >
         {children}
         <Analytics />
         <SpeedInsights />
