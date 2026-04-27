@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { notFound, redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import type { Organisation } from "@/lib/supabase/types";
@@ -14,7 +15,10 @@ export type OrgAdminContext = {
 // Gate for /orgs/[slug]/admin/* pages. Returns the user, the resolved org, and
 // the caller's role. Redirects to /signin if signed-out; 404s when the org
 // doesn't exist or the user isn't an org_admin (and isn't an umbrella admin).
-export async function requireOrgAdmin(slug: string): Promise<OrgAdminContext> {
+//
+// Wrapped in React `cache()` so the layout + page + nested components share
+// one result per request — drops 4 Supabase queries per admin page load.
+export const requireOrgAdmin = cache(async (slug: string): Promise<OrgAdminContext> => {
   const supabase = await getSupabaseServer();
 
   const {
@@ -48,4 +52,4 @@ export async function requireOrgAdmin(slug: string): Promise<OrgAdminContext> {
 
   const role = (adminRow?.role as OrgAdminRole | undefined) ?? "owner";
   return { user: { id: user.id, email: user.email }, org, role, isUmbrella };
-}
+});

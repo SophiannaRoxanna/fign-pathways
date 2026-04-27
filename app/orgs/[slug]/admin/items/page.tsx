@@ -152,14 +152,23 @@ export default async function OrgAdminItemsPage({
                       ? "rolling"
                       : "—"}
                 </span>
-                <Link
-                  href={`/orgs/${slug}/admin/items/${it.id}/registrations`}
-                  className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold"
-                  style={{ color: isHost ? C.ink : C.inkMute }}
-                  aria-disabled={!isHost}
-                >
-                  {regCountByItem.get(it.id) ?? 0}
-                </Link>
+                {isHost ? (
+                  <Link
+                    href={`/orgs/${slug}/admin/items/${it.id}/registrations`}
+                    className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold"
+                    style={{ color: C.ink }}
+                  >
+                    {regCountByItem.get(it.id) ?? 0}
+                  </Link>
+                ) : (
+                  <span
+                    className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold"
+                    style={{ color: C.inkMute }}
+                    title="Co-host — registrations are managed by the host org"
+                  >
+                    {regCountByItem.get(it.id) ?? 0}
+                  </span>
+                )}
                 <span
                   className="font-mono text-[10px] tracking-[0.18em] uppercase"
                   style={{ color: C.inkMute }}

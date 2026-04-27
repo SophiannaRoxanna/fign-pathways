@@ -8,8 +8,12 @@ import type { Lesson, Organisation } from "@/lib/supabase/types";
 export default async function AdminLessonsPage() {
   const supabase = await getSupabaseServer();
   const [{ data: lessonsData }, { data: orgsData }] = await Promise.all([
-    supabase.from("lessons").select("*").order("created_at", { ascending: false }),
-    supabase.from("organisations").select("*"),
+    supabase
+      .from("lessons")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(500),
+    supabase.from("organisations").select("*").limit(500),
   ]);
   const lessons = (lessonsData ?? []) as Lesson[];
   const orgs = (orgsData ?? []) as Organisation[];

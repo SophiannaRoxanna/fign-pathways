@@ -8,6 +8,10 @@ import { OrgChip } from "@/components/org/OrgChip";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import type { Organisation } from "@/lib/supabase/types";
 
+// Public, queryable page. Cap recompute to once a minute so visit-spikes don't
+// re-run the dozen aggregate queries below.
+export const revalidate = 60;
+
 type PageProps = { params: Promise<{ slug: string }> };
 
 const monthFmt = new Intl.DateTimeFormat("en", {

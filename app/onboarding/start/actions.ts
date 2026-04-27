@@ -26,7 +26,10 @@ export async function completeOnboarding(input: OnboardFormInput) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("not signed in");
 
-  const handle = parsed.handle.startsWith("@") ? parsed.handle : `@${parsed.handle}`;
+  // Normalise handle: strip leading @, lowercase, then re-prefix. Prevents
+  // case-collision dupes (@Alice vs @alice) on the unique index.
+  const cleanHandle = parsed.handle.replace(/^@/, "").toLowerCase();
+  const handle = `@${cleanHandle}`;
 
   const { error } = await supabase.rpc("onboard_member", {
     p_member: user.id,
@@ -35,7 +38,7 @@ export async function completeOnboarding(input: OnboardFormInput) {
     p_country: parsed.country,
     p_city: parsed.city,
     p_language_pref: parsed.language_pref,
-    p_email: user.email ?? null,
+    p_email: user.email?.toLowerCase() ?? null,
     p_phone: null,
     p_description: parsed.description ?? null,
     p_declared_slugs: parsed.declared_slugs,

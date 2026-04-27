@@ -63,19 +63,34 @@ export async function inviteTeamAdminAction(formData: FormData) {
     if (insErr) throw new Error(`could not seed member row: ${insErr.message}`);
   }
 
-  // First admin of this org defaults to owner (matches super-admin behaviour).
+  // First admin of this org defaults to owner. Migration 0008 adds a partial
+  // unique index `(org_id) where role='owner'` so concurrent invites can't
+  // both win owner; if the index rejects us, fall back to the requested role.
   const { count } = await admin
     .from("org_admins")
     .select("*", { count: "exact", head: true })
     .eq("org_id", org.id);
-  const effectiveRole = (count ?? 0) === 0 ? "owner" : parsed.role;
+  const wantsOwner = (count ?? 0) === 0;
+  const effectiveRole = wantsOwner ? "owner" : parsed.role;
 
-  const { error: linkErr } = await admin
+  let { error: linkErr } = await admin
     .from("org_admins")
     .upsert(
       { org_id: org.id, member_id: memberId, role: effectiveRole },
       { onConflict: "org_id,member_id" },
     );
+
+  // Postgres unique-violation = code 23505. The owner-uniqueness index trips
+  // here when two invites race; retry as a coordinator.
+  if (linkErr && wantsOwner && (linkErr as { code?: string }).code === "23505") {
+    const retry = await admin
+      .from("org_admins")
+      .upsert(
+        { org_id: org.id, member_id: memberId, role: parsed.role },
+        { onConflict: "org_id,member_id" },
+      );
+    linkErr = retry.error;
+  }
   if (linkErr) throw new Error(`team link failed: ${linkErr.message}`);
 
   revalidatePath(`/orgs/${parsed.slug}/admin/team`);

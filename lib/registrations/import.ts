@@ -50,6 +50,9 @@ export async function importRegistrations(params: {
 
   const emails = Array.from(new Set(normalized.map((r) => r.email)));
 
+  // Migration 0008 adds a trigger that lowercases members.email on write +
+  // backfills history, so a straight `.in(...)` on lowercase strings now
+  // matches every existing row. We still defensively lower() what we read.
   const { data: memberRows, error: memErr } = await admin
     .from("members")
     .select("id, email")
@@ -58,7 +61,7 @@ export async function importRegistrations(params: {
 
   const idByEmail = new Map(
     (memberRows ?? []).map((m) => [
-      (m as { email: string; id: string }).email.toLowerCase(),
+      ((m as { email: string | null; id: string }).email ?? "").toLowerCase(),
       (m as { id: string }).id,
     ]),
   );
@@ -128,7 +131,8 @@ export async function importRegistrations(params: {
     if (upErr) throw new Error(`item_registrations upsert failed: ${upErr.message}`);
   }
 
-  // Fetch item title once for activity payload.
+  // One bulk RPC instead of N round-trips. Migration 0008 adds
+  // record_activities_bulk; same authorisation model as record_activity.
   if (attendanceActivitiesFor.length > 0) {
     const { data: itemRow } = await admin
       .from("items")
@@ -136,18 +140,18 @@ export async function importRegistrations(params: {
       .eq("id", itemId)
       .maybeSingle();
     const title = (itemRow as { title: string } | null)?.title ?? "Event";
-    for (const memberId of attendanceActivitiesFor) {
-      const { error: rpcErr } = await admin.rpc("record_activity", {
-        p_member: memberId,
-        p_kind: "event_attended",
-        p_host_org: hostOrgId,
-        p_payload: {
-          title,
-          related_entity_id: itemId,
-          related_entity_type: "item",
-        },
-      });
-      if (rpcErr) throw new Error(`record_activity failed: ${rpcErr.message}`);
+    const { error: rpcErr } = await admin.rpc("record_activities_bulk", {
+      p_member_ids: attendanceActivitiesFor,
+      p_kind: "event_attended",
+      p_host_org: hostOrgId,
+      p_payload: {
+        title,
+        related_entity_id: itemId,
+        related_entity_type: "item",
+      },
+    });
+    if (rpcErr) {
+      throw new Error(`record_activities_bulk failed: ${rpcErr.message}`);
     }
   }
 

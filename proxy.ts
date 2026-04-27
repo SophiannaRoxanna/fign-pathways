@@ -47,6 +47,27 @@ export async function proxy(req: NextRequest) {
     return NextResponse.redirect(signin);
   }
 
+  // Authed user on a protected surface but no member row yet → bounce to onboarding.
+  // /onboarding/* is always allowed; /auth/* is the magic-link callback path.
+  if (
+    user &&
+    isProtected &&
+    !path.startsWith("/onboarding") &&
+    !path.startsWith("/auth")
+  ) {
+    const { data: member } = await supabase
+      .from("members")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (!member) {
+      const onboard = req.nextUrl.clone();
+      onboard.pathname = "/onboarding/start";
+      onboard.search = "";
+      return NextResponse.redirect(onboard);
+    }
+  }
+
   // Already-authenticated users visiting /signin bounce to /map.
   if (user && path === "/signin") {
     const map = req.nextUrl.clone();

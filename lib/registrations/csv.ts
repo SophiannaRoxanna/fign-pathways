@@ -53,6 +53,8 @@ export type ParsedAttendeeRow = {
 const truthy = (v: string | undefined) =>
   v != null && /^(1|true|yes|y|attended|present|✓)$/i.test(v.trim());
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export function parseAttendeeCsv(text: string): ParsedAttendeeRow[] {
   const rows = parseCSV(text);
   if (rows.length === 0) return [];
@@ -61,10 +63,18 @@ export function parseAttendeeCsv(text: string): ParsedAttendeeRow[] {
 
   const emailIdx = col("email");
   if (emailIdx < 0) {
-    // No header with "email" — assume the first column IS email.
+    // No header with "email". Allow header-less CSVs only if the first cell of
+    // the first row is itself a valid email — otherwise refuse rather than
+    // silently treat someone's "name" column as email.
+    const firstCell = (rows[0]?.[0] ?? "").trim();
+    if (!EMAIL_RE.test(firstCell)) {
+      throw new Error(
+        "CSV is missing an 'email' header column and the first cell isn't an email address.",
+      );
+    }
     return rows
       .map((r) => ({ email: (r[0] ?? "").trim() }))
-      .filter((r) => r.email);
+      .filter((r) => EMAIL_RE.test(r.email));
   }
   const nameIdx = col("name");
   const attendedIdx = col("attended");

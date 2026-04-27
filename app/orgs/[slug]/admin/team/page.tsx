@@ -214,9 +214,10 @@ export default async function OrgAdminTeamPage({
           className="mt-8 flex flex-wrap items-end gap-3"
         >
           <input type="hidden" name="slug" value={slug} />
-          <div className="flex flex-col gap-1.5 flex-1 min-w-[260px]">
-            <Label>invite by email</Label>
+          <div className="flex flex-col gap-1.5 flex-1 min-w-65">
+            <Label htmlFor="team-invite-email">invite by email</Label>
             <input
+              id="team-invite-email"
               name="email"
               type="email"
               required
@@ -225,8 +226,13 @@ export default async function OrgAdminTeamPage({
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label>role</Label>
-            <select name="role" defaultValue="coordinator" style={inputStyle}>
+            <Label htmlFor="team-invite-role">role</Label>
+            <select
+              id="team-invite-role"
+              name="role"
+              defaultValue="coordinator"
+              style={inputStyle}
+            >
               <option value="coordinator">coordinator</option>
               <option value="poster">poster</option>
             </select>

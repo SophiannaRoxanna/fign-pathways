@@ -48,23 +48,33 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ milestone: data });
   }
 
+  // For these ops we explicitly select to confirm the update affected a row;
+  // a 0-row "update" returns 404 instead of an OK that lies about success.
   if (op === "retire") {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("milestones")
       .update({ status: "retired" })
       .eq("id", id)
-      .eq("member_id", user.id);
+      .eq("member_id", user.id)
+      .select("id");
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: "milestone not found" }, { status: 404 });
+    }
     return NextResponse.json({ ok: true });
   }
 
   if (op === "mark_met") {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("milestones")
       .update({ status: "met", progress: 1 })
       .eq("id", id)
-      .eq("member_id", user.id);
+      .eq("member_id", user.id)
+      .select("id");
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: "milestone not found" }, { status: 404 });
+    }
     return NextResponse.json({ ok: true });
   }
 
@@ -72,12 +82,16 @@ export async function POST(req: NextRequest) {
     if (progress === undefined) {
       return NextResponse.json({ error: "progress required" }, { status: 400 });
     }
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("milestones")
       .update({ progress })
       .eq("id", id)
-      .eq("member_id", user.id);
+      .eq("member_id", user.id)
+      .select("id");
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!data || data.length === 0) {
+      return NextResponse.json({ error: "milestone not found" }, { status: 404 });
+    }
     return NextResponse.json({ ok: true });
   }
 

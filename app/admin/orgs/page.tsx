@@ -11,7 +11,8 @@ export default async function AdminOrgsPage() {
     .from("organisations")
     .select("*")
     .order("type")
-    .order("name");
+    .order("name")
+    .limit(500);
 
   const rows = (orgs ?? []) as Organisation[];
 

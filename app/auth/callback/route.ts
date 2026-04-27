@@ -6,7 +6,13 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 export async function GET(req: NextRequest) {
   const { searchParams, origin } = new URL(req.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/map";
+  const rawNext = searchParams.get("next");
+  // Open-redirect guard: only relative paths starting with "/" but NOT "//"
+  // (protocol-relative URLs resolve to a foreign host in the browser).
+  const next =
+    rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//")
+      ? rawNext
+      : "/map";
 
   if (!code) {
     return NextResponse.redirect(`${origin}/signin?err=no_code`);

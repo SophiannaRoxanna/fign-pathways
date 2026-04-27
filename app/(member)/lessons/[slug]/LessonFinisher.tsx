@@ -29,10 +29,12 @@ export function LessonFinisher({
   const [completion, setCompletion] = useState<LessonDoneCompletion | null>(
     null,
   );
+  const [error, setError] = useState<string | null>(null);
 
   async function markDone() {
     if (busy) return;
     setBusy(true);
+    setError(null);
     try {
       const res = await fetch("/api/complete-lesson", {
         method: "POST",
@@ -50,6 +52,7 @@ export function LessonFinisher({
       });
     } catch (err) {
       console.error(err);
+      setError("Couldn't save right now. Check your connection and try again.");
     } finally {
       setBusy(false);
     }
@@ -83,15 +86,26 @@ export function LessonFinisher({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={markDone}
-        disabled={busy}
-        className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold px-4 py-2 disabled:opacity-60"
-        style={{ background: C.ink, color: C.paper }}
-      >
-        {busy ? "saving..." : "I did this · mark as finished →"}
-      </button>
+      <div className="flex flex-col gap-2 items-start">
+        <button
+          type="button"
+          onClick={markDone}
+          disabled={busy}
+          className="font-mono text-[11px] tracking-[0.18em] uppercase font-bold px-4 py-2 disabled:opacity-60"
+          style={{ background: C.ink, color: C.paper }}
+        >
+          {busy ? "saving..." : "I did this · mark as finished →"}
+        </button>
+        {error ? (
+          <p
+            role="alert"
+            className="font-display italic text-[14px]"
+            style={{ color: C.danger }}
+          >
+            {error}
+          </p>
+        ) : null}
+      </div>
       <LessonDoneModal
         completion={completion}
         options={options}
