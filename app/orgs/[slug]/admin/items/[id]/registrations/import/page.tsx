@@ -118,7 +118,10 @@ export default async function OrgAdminImportPage({
       {sp.err ? (
         <div
           className="mb-8 p-5"
-          style={{ background: "#fde7ea", border: `1.5px solid ${C.danger}` }}
+          style={{
+            background: C.dangerSoft,
+            border: `1.5px solid ${C.danger}`,
+          }}
         >
           <Label color={C.danger}>import failed</Label>
           <p
@@ -135,8 +138,9 @@ export default async function OrgAdminImportPage({
         <input type="hidden" name="item_id" value={id} />
 
         <div className="flex flex-col gap-2">
-          <Label>paste csv</Label>
+          <Label htmlFor="csv-text">paste csv</Label>
           <textarea
+            id="csv-text"
             name="csv_text"
             rows={10}
             placeholder={`email,name,attended\nmaya@fac.cm,Maya,yes\nngozi@example.com,Ngozi,yes`}
@@ -152,8 +156,13 @@ export default async function OrgAdminImportPage({
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label>upload csv file</Label>
-          <input type="file" name="csv_file" accept=".csv,text/csv" />
+          <Label htmlFor="csv-file">upload csv file</Label>
+          <input
+            id="csv-file"
+            type="file"
+            name="csv_file"
+            accept=".csv,text/csv"
+          />
         </div>
 
         <PrimaryButton>Import →</PrimaryButton>

@@ -33,7 +33,8 @@ export const C = {
   greenLt: "#FFE0F0",    // success-card wash — now pink (coralSoft), more brand-consistent
 
   // System
-  danger: "#B32A3C",     // error states, used text+icon first
+  danger:     "#B32A3C", // error states, used text+icon first
+  dangerSoft: "#FDE7EA", // wash background under danger text/borders
 
   // Dark theme (marketing surfaces: / and /signin)
   canvasDark:      "#140A1A", // marketing background, near-black tinted toward purple

@@ -8,8 +8,12 @@ import type { Item, Organisation } from "@/lib/supabase/types";
 export default async function AdminItemsPage() {
   const supabase = await getSupabaseServer();
   const [{ data: itemsData }, { data: orgsData }] = await Promise.all([
-    supabase.from("items").select("*").order("posted_at", { ascending: false }),
-    supabase.from("organisations").select("*"),
+    supabase
+      .from("items")
+      .select("*")
+      .order("posted_at", { ascending: false })
+      .limit(500),
+    supabase.from("organisations").select("*").limit(500),
   ]);
 
   const items = (itemsData ?? []) as Item[];

@@ -10,12 +10,16 @@ type FieldProps = {
   label: string;
   hint?: string;
   children: React.ReactNode;
+  // When set, Field wraps its label in a real <label htmlFor={htmlFor}> and
+  // exposes the same id as `<Field htmlFor="x"><input id="x"/></Field>` —
+  // screen readers can then announce the label on focus.
+  htmlFor?: string;
 };
 
-export function Field({ label, hint, children }: FieldProps) {
+export function Field({ label, hint, children, htmlFor }: FieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
-      <Label>{label}</Label>
+      <Label htmlFor={htmlFor}>{label}</Label>
       {children}
       {hint ? (
         <span

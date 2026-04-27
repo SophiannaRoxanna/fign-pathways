@@ -30,20 +30,6 @@ export default async function MePage() {
   const me = meData as Member | null;
   if (!me) return null;
 
-  let primaryOrg: Organisation | null = null;
-  if (me.primary_org_id) {
-    const { data } = await supabase
-      .from("organisations")
-      .select("*")
-      .eq("id", me.primary_org_id)
-      .maybeSingle();
-    primaryOrg = data as Organisation | null;
-  }
-
-  const { data: tagRows } = await supabase
-    .from("member_tags")
-    .select("source, interest_tags!inner(slug, name_en, color, group)")
-    .eq("member_id", user.id);
   type TagRow = {
     source: "declared" | "derived" | "activity_inferred";
     interest_tags: {
@@ -53,6 +39,54 @@ export default async function MePage() {
       group: string;
     } | null;
   };
+
+  // All independent member-scoped fetches in parallel — saves ~5 round trips
+  // on the page that gets hit on every login.
+  const [
+    primaryOrgRes,
+    tagRowsRes,
+    milestonesRes,
+    activitiesRes,
+    skillsRes,
+    attendedHostsRes,
+  ] = await Promise.all([
+    me.primary_org_id
+      ? supabase
+          .from("organisations")
+          .select("*")
+          .eq("id", me.primary_org_id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+    supabase
+      .from("member_tags")
+      .select("source, interest_tags!inner(slug, name_en, color, group)")
+      .eq("member_id", user.id),
+    supabase
+      .from("milestones")
+      .select("*")
+      .eq("member_id", user.id)
+      .order("set_at", { ascending: false }),
+    supabase
+      .from("activities")
+      .select(
+        "id, title, kind, kind_group, xp_awarded, created_at, host:organisations(id, slug, name, short_name, type, brand_color)",
+      )
+      .eq("member_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(30),
+    supabase
+      .from("member_skills")
+      .select("id, skill_name, level, is_public")
+      .eq("member_id", user.id),
+    supabase
+      .from("item_registrations")
+      .select("items!inner(host_org_id)")
+      .eq("member_id", user.id)
+      .eq("attended", true),
+  ]);
+
+  const primaryOrg = (primaryOrgRes.data as Organisation | null) ?? null;
+  const tagRows = tagRowsRes.data;
   const declared: TagRow[] = [];
   const derived: TagRow[] = [];
   (tagRows as TagRow[] | null)?.forEach((r) => {
@@ -60,20 +94,8 @@ export default async function MePage() {
     if (r.source === "declared") declared.push(r);
     else derived.push(r);
   });
-
-  const { data: milestonesData } = await supabase
-    .from("milestones")
-    .select("*")
-    .eq("member_id", user.id)
-    .order("set_at", { ascending: false });
-  const milestones = (milestonesData as Milestone[] | null) ?? [];
-
-  const { data: activitiesData } = await supabase
-    .from("activities")
-    .select("id, title, kind, kind_group, xp_awarded, created_at, host:organisations(id, slug, name, short_name, type, brand_color)")
-    .eq("member_id", user.id)
-    .order("created_at", { ascending: false })
-    .limit(30);
+  const milestones = (milestonesRes.data as Milestone[] | null) ?? [];
+  const activitiesData = activitiesRes.data;
   type RawActivity = {
     id: string;
     title: string | null;
@@ -108,11 +130,7 @@ export default async function MePage() {
     created_at: a.created_at,
   }));
 
-  const { data: skillsData } = await supabase
-    .from("member_skills")
-    .select("id, skill_name, level, is_public")
-    .eq("member_id", user.id);
-  const skills = (skillsData ?? []) as {
+  const skills = (skillsRes.data ?? []) as {
     id: string;
     skill_name: string;
     level: number;
@@ -123,12 +141,7 @@ export default async function MePage() {
   // Orgs the member could appear on: primary + any org whose item they attended.
   const rosterableOrgIds = new Set<string>();
   if (me.primary_org_id) rosterableOrgIds.add(me.primary_org_id);
-  const { data: attendedHosts } = await supabase
-    .from("item_registrations")
-    .select("items!inner(host_org_id)")
-    .eq("member_id", user.id)
-    .eq("attended", true);
-  for (const row of (attendedHosts ?? []) as unknown as {
+  for (const row of (attendedHostsRes.data ?? []) as unknown as {
     items: { host_org_id: string } | { host_org_id: string }[] | null;
   }[]) {
     const it = Array.isArray(row.items) ? row.items[0] : row.items;

@@ -21,7 +21,10 @@ export async function toggleRosterVisibilityAction(formData: FormData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("not signed in");
+  // Middleware already redirects unauthenticated requests away from /me, so
+  // hitting this from a real browser shouldn't happen. Treat as a no-op
+  // rather than a 500 if the session expired between render and action.
+  if (!user) return;
 
   const visible = parsed.next === "1";
   const { error } = await supabase.from("org_roster_visibility").upsert(

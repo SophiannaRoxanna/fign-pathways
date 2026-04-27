@@ -15,15 +15,20 @@ export default async function AdminMembersPage({ searchParams }: PageProps) {
   const { country, primary_org } = await searchParams;
   const supabase = await getSupabaseServer();
 
-  let query = supabase.from("members").select("*").order("joined_at", { ascending: false });
+  let query = supabase
+    .from("members")
+    .select("*")
+    .order("joined_at", { ascending: false })
+    .limit(500);
   if (country) query = query.eq("country", country);
   if (primary_org) query = query.eq("primary_org_id", primary_org);
 
   const [{ data: membersData }, { data: orgsData }, { data: allForCountries }] =
     await Promise.all([
       query,
-      supabase.from("organisations").select("*").order("name"),
-      supabase.from("members").select("country"),
+      supabase.from("organisations").select("*").order("name").limit(500),
+      // For the country filter dropdown — only the column we need.
+      supabase.from("members").select("country").limit(5000),
     ]);
 
   const members = (membersData ?? []) as Member[];

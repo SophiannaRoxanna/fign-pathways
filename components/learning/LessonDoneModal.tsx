@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { C } from "@/lib/design/tokens";
 import { Label } from "@/components/ui/Label";
 import type { DoorCopy, DoorId } from "@/lib/copy/doorOptions";
@@ -18,15 +19,39 @@ type Props = {
 };
 
 export function LessonDoneModal({ completion, options, onClose, onPick }: Props) {
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+
+  // Close on Escape; lock background scroll while open; move focus into the
+  // dialog so screen readers + keyboard users land in the right place.
+  useEffect(() => {
+    if (!completion) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeBtnRef.current?.focus();
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [completion, onClose]);
+
   if (!completion) return null;
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="lesson-done-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: "rgba(26, 20, 16, 0.75)" }}
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         className="max-w-3xl w-full max-h-[90vh] overflow-y-auto"
         style={{ background: C.paper, border: `2px solid ${C.ink}` }}
         onClick={(e) => e.stopPropagation()}
@@ -38,8 +63,10 @@ export function LessonDoneModal({ completion, options, onClose, onPick }: Props)
           <div className="flex items-center justify-between">
             <Label>§ lesson complete</Label>
             <button
+              ref={closeBtnRef}
               type="button"
               onClick={onClose}
+              aria-label="Close lesson-complete dialog"
               className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold"
               style={{ color: C.inkSoft }}
             >
@@ -47,6 +74,7 @@ export function LessonDoneModal({ completion, options, onClose, onPick }: Props)
             </button>
           </div>
           <h2
+            id="lesson-done-title"
             className="mt-3 font-display text-3xl md:text-4xl leading-tight"
             style={{ color: C.ink }}
           >

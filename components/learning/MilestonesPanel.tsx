@@ -138,6 +138,11 @@ export function MilestonesPanel({ initial }: { initial: Milestone[] }) {
                   </blockquote>
                 )}
                 <div
+                  role="progressbar"
+                  aria-valuenow={Math.round(m.progress * 100)}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`Progress on milestone: ${Math.round(m.progress * 100)}%`}
                   className="mt-3 relative h-2"
                   style={{
                     background: C.paper,

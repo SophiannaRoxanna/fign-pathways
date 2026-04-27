@@ -127,7 +127,9 @@ export async function rotateWebhookSecretAction(formData: FormData) {
     httpOnly: true,
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
-    maxAge: 120,
+    // 30s — long enough to copy + dismiss in one sitting, short enough that
+    // walking away from the desk doesn't reveal the secret on refresh.
+    maxAge: 30,
     path: `/orgs/${parsed.slug}/admin/settings`,
   });
 

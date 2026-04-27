@@ -148,8 +148,9 @@ export function OnboardingForm({
         {step === 0 && (
           <div className="space-y-4">
             <div>
-              <Label>your name</Label>
+              <Label htmlFor="onboard-name">your name</Label>
               <input
+                id="onboard-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Amara Okonkwo"
@@ -158,8 +159,9 @@ export function OnboardingForm({
               />
             </div>
             <div>
-              <Label>handle</Label>
+              <Label htmlFor="onboard-handle">handle</Label>
               <input
+                id="onboard-handle"
                 value={handle}
                 onChange={(e) => setHandle(e.target.value)}
                 placeholder="@amara.plays"
@@ -169,8 +171,9 @@ export function OnboardingForm({
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>country</Label>
+                <Label htmlFor="onboard-country">country</Label>
                 <select
+                  id="onboard-country"
                   value={country}
                   onChange={(e) => setCountry(e.target.value)}
                   className="mt-1 w-full px-3 py-2"
@@ -184,8 +187,9 @@ export function OnboardingForm({
                 </select>
               </div>
               <div>
-                <Label>city</Label>
+                <Label htmlFor="onboard-city">city</Label>
                 <input
+                  id="onboard-city"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="Port Harcourt"
